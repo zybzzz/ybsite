@@ -2,6 +2,7 @@ import { defineConfig } from 'vitepress'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
+  base: '/ybsite/',
   title: "Yibo Zhang's site",
   description: "A Simple Site",
   themeConfig: {
