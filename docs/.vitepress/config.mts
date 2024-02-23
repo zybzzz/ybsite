@@ -39,6 +39,7 @@ export default defineConfig({
                   collapsed: true,
                   items: [
                     { text: 'ch4 debuging in gdb', link: '/notes/sim/debuger/gdb/ch4' },
+                    { text: 'ch5 debuging in gdb', link: '/notes/sim/debuger/gdb/ch5' },
                   ]
                 },
               ]
