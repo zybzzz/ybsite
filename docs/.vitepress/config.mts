@@ -33,6 +33,14 @@ export default defineConfig({
               collapsed: true,
               items: [
                 { text: 'pdb handbook', link: '/notes/sim/debuger/pdb' },
+                //level3
+                {
+                  text: 'gdb', 
+                  collapsed: true,
+                  items: [
+                    { text: 'ch4 debuging in gdb', link: '/notes/sim/debuger/gdb/ch4' },
+                  ]
+                },
               ]
             }
           ]
