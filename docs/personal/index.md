@@ -12,7 +12,7 @@ Keep going!
 ## Currently studying & Research interest
 
 - Computer architecture
-- Simulators for architecture exploration (e.g. gem5) 
+- Simulators for architecture exploration (e.g. gem5)
 - Compilation techniques for specialized architectures
 - Compile optimization for parallel architecture
 
