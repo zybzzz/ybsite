@@ -24,6 +24,22 @@ export default defineConfig({
         //     { text: 'Runtime API Examples', link: '/api-examples' }
         //   ]
         // },
+
+        {
+          text: 'Language learning',
+          collapsed: false,
+          items: [
+            { //level2
+              text: 'python',
+              collapsed: true,
+              link:'/notes/langlearn/python/',
+              items: [
+                { text: 'fluent_python reading note', link: '/notes/langlearn/python/fluent_python' },
+              ]
+            }
+          ]
+        },
+
         { //level1
           text: 'Simulators & gem5',  
           collapsed: false,
@@ -50,6 +66,7 @@ export default defineConfig({
             }
           ]
         },
+
 
         {
           text: 'About me',
