@@ -42,6 +42,7 @@ export default defineConfig({
                     { text: 'ch5 debuging in gdb', link: '/notes/sim/debuger/gdb/ch5' },
                     { text: 'ch9 debuging in gdb', link: '/notes/sim/debuger/gdb/ch9' },
                     { text: 'ch10 debuging in gdb', link: '/notes/sim/debuger/gdb/ch10' },
+                    { text: 'ch17 debuging in gdb', link: '/notes/sim/debuger/gdb/ch17' },
                   ]
                 },
               ]
