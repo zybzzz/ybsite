@@ -1,4 +1,4 @@
-# gdb debugger
+# gdb debuger
 
 这一系列笔记主要记录对 [_debugging_ _in_ _gdb_](https://sourceware.org/gdb/current/onlinedocs/gdb.html/index.html#SEC_Contents)，这本书进行简单的略读。记录各个章节中介绍的指令以及主要内容方便日后查阅。
 
