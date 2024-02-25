@@ -62,6 +62,14 @@ export default defineConfig({
                     { text: 'ch17 debuging in gdb', link: '/notes/sim/debuger/gdb/ch17' },
                   ]
                 },
+                //level 3
+                {
+                  text: 'Debugging Techniques', 
+                  collapsed: true,
+                  items: [
+                    { text: 'debug c/cpp macro', link: '/notes/sim/debuger/debugtech/debug_macro' },
+                  ]
+                },
               ]
             }
           ]
