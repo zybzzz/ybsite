@@ -34,6 +34,7 @@ export default defineConfig({
               collapsed: true,
               link:'/notes/langlearn/python/',
               items: [
+                { text: 'Python function parameter parsing', link: '/notes/langlearn/python/Python_function_parameter_parsing'},
                 { text: 'fluent_python reading note', link: '/notes/langlearn/python/fluent_python' },
               ]
             }
