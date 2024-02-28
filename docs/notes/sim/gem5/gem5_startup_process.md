@@ -1,0 +1,3 @@
+# The gem5 startup process
+
+此处暂时简单记录启动过程。启动的过程主要是从cpp到Python的，cpp会将所有的嵌入式模块加载。python中的init主要是解析相关的选项。instantiate创建对象，连线。simulate正式开始模拟。理解simobject的python源码是挺重要的，还没时间去看。
