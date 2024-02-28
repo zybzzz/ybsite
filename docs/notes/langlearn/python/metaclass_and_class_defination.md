@@ -82,3 +82,7 @@ in b init
 in a init
 after create
 ```
+
+## 在 import 导入时
+
+当你在 python 中导入一个模块时，这个模块的代码将会被执行，包括类定义的代码。因此当代码中的类有元类的时候，当进行 import 导入模块的时候，元类会开始类创建的工作。

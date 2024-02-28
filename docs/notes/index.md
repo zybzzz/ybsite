@@ -6,4 +6,6 @@ Of course the table of contents and selected articles are also given below.
 
 ## Table of contents
 
-## Selected articles
+## Selected notes
+
+- [⭐⭐⭐ gem5 build process analysis](./sim/gem5/build_process_analysis)

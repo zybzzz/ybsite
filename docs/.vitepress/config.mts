@@ -73,7 +73,15 @@ export default defineConfig({
                   ]
                 },
               ]
-            }
+            },
+
+            { //level2
+              text: 'gem5 simulator',
+              collapsed: true,
+              items: [
+                { text: 'gem5 build process analysis', link: '/notes/sim/gem5/build_process_analysis' },
+              ]
+            },
           ]
         },
 
