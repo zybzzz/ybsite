@@ -1,4 +1,4 @@
-# python_import_statement
+# python import statement
 
 这篇文章主要解析 python 的 import 和 from-import 语句使用。
 
