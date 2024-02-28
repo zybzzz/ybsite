@@ -36,6 +36,7 @@ export default defineConfig({
               items: [
                 { text: 'metaclass and class defination in python', link: '/notes/langlearn/python/metaclass_and_class_defination'},
                 { text: 'Python function parameter parsing', link: '/notes/langlearn/python/Python_function_parameter_parsing'},
+                { text: 'python import statement', link: '/notes/langlearn/python/python_import_statement'},
                 { text: 'fluent_python reading note', link: '/notes/langlearn/python/fluent_python' },
               ]
             }
