@@ -179,3 +179,453 @@ if not ('CC' in main and 'CXX' in main):
 
 随后进行 main 环境的创建， main 是 scons 中的环境对象。在创建之后，main开始选择编译器，在选择编译器完成之后导出了 main，这里导出的 main 只是一个仅仅包含了编译器的环境。后续的 `get_termcap` 设置了终端颜色的显示，随后脚本进行编译器的检查，查看环境中是否有编译器的安装，如果没有直接打印报错，终止构建过程。
 
+```python
+# Find default configuration & binary.
+# M5_DEFAULT_BINARY env var decide what to build
+default_target = environ.get('M5_DEFAULT_BINARY', None)
+if default_target:
+    # set default target
+    Default(default_target)
+
+# If no target is set, even a default, print help instead.
+if not BUILD_TARGETS:
+    warning("No target specified, and no default.")
+    SetOption('help', True)
+```
+
+如果在本机的环境变量中有设置`M5_DEFAULT_BINARY`，则将设置的这个变量作为默认的构建目标。如果环境变量没有设置，也没有在命令中给出构建的目标，那给出警告并打印警告信息。
+
+```python
+# reading config from build_opts
+buildopts_dir = Dir('#build_opts')
+buildopts = list([f for f in os.listdir(buildopts_dir.abspath) if
+        isfile(os.path.join(buildopts_dir.abspath, f))])
+buildopts.sort()
+# just change the format
+buildopt_list = '\n'.join(' ' * 10 + buildopt for buildopt in buildopts)
+
+Help(f"""
+Targets:
+        To build gem5 using a predefined configuration, use a target with
+        a directory called "build" in the path, followed by a directory named
+        after a predefined configuration in "build_opts" directory, and then
+        the actual target, likely a gem5 binary. For example:
+
+        scons build/ALL/gem5.opt
+
+        The "build" component tells SCons that the next part names an initial
+        configuration, and the part after that is the actual target.
+        The predefined targets currently available are:
+
+{buildopt_list}
+
+        The extension on the gem5 binary specifies what type of binary to
+        build. Options are:
+
+        debug: A debug binary with optimizations turned off and debug info
+            turned on.
+        opt: An optimized binary with debugging still turned on.
+        fast: An optimized binary with debugging, asserts, and tracing
+            disabled.
+
+        gem5 can also be built as a static or dynamic library. In that case,
+        the extension is determined by the operating system, so the binary type
+        is part of the target file name. For example:
+
+        scons build/ARM/libgem5_opt.so
+
+        In MacOS, the extension should change to "dylib" like this:
+
+        scons build/ARM/libgem5_opt.dylib
+
+        To build unit tests, you can use a target like this:
+
+        scons build/RISCV/unittests.debug
+
+        The unittests.debug part of the target is actual a directory which
+        holds the results for all the unit tests built with the "debug"
+        settings. When that's used as the target, SCons will build all the
+        files under that directory, which will run all the tests.
+
+        To build and run an individual test, you can built it's binary
+        specifically and then run it manually:
+
+        scons build/SPARC/base/bitunion.test.opt
+        build/SPARC/base/bitunion.test.opt
+""", append=True)
+```
+
+这里主要是把 `buildopts` 这个目录中的文件名读出来并在帮助信息中展示，`buildopts` 这个目录下存放的是一些配置文件。
+
+```python
+########################################################################
+#
+# Figure out which configurations to set up based on the path(s) of
+# the target(s).
+#
+########################################################################
+
+kconfig_actions = (
+    'defconfig',
+    'guiconfig',
+    'listnewconfig',
+    'menuconfig',
+    'oldconfig',
+    'olddefconfig',
+    'savedefconfig',
+    'setconfig',
+)
+
+Help("""
+Kconfig:
+        In addition to the default configs, you can also create your own
+        configs, or edit one that already exists. To use one of the kconfig
+        tools with a particular directory, use a target which is the directory
+        to configure, and then the name of the tool. For example, to run
+        menuconfig on directory build_foo/bar, run:
+
+        scons menuconfig build_foo/bar
+
+        will set up a build directory in build_foo/bar if one doesn't already
+        exist, and open the menuconfig editor to view/set configuration
+        values.
+
+Kconfig tools:
+        defconfig:
+        Set up a config using values specified in a defconfig file, or if no
+        value is given, use the default. The second argument specifies the
+        defconfig file. A defconfig file in the build_opts directory can be
+        implicitly specified in the build path via `build/<defconfig file>/`
+
+        scons defconfig build_foo/bar build_opts/MIPS
+
+
+        guiconfig:
+        Opens the guiconfig editor which will let you view and edit config
+        values, and view help text. guiconfig runs as a graphical application.
+
+        scons guiconfig build_foo/bar
+
+
+        listnewconfig:
+        Lists config options which are new in the Kconfig and which are not
+        currently set in the existing config file.
+
+        scons listnewconfig build_foo/bar
+
+
+        menuconfig:
+        Opens the menuconfig editor which will let you view and edit config
+        values, and view help text. menuconfig runs in text mode.
+
+        scons menuconfig build_foo/bar
+
+
+        oldconfig:
+        Update an existing config by adding settings for new options. This is
+        the same as the olddefconfig tool, except it asks what values you want
+        for the new settings.
+
+        scons oldconfig build_foo/bar
+
+
+        olddefconfig:
+        Update an existing config by adding settings for new options. This is
+        the same as the oldconfig tool, except it uses the default for any new
+        setting.
+
+        scons olddefconfig build_foo/bar
+
+
+        savedefconfig:
+        Save a defconfig file which would give rise to the current config.
+        For instance, you could use menuconfig to set up a config how you want
+        it with the options you cared about, and then use savedefconfig to save
+        a minimal config file. These files would be suitable to use in the
+        defconfig directory. The second argument specifies the filename for
+        the new defconfig file.
+
+        scons savedefconfig build_foo/bar new_def_config
+
+
+        setconfig:
+        Set values in an existing config directory as specified on the command
+        line. For example, to enable gem5's built in systemc kernel:
+
+        scons setconfig build_foo/bar USE_SYSTEMC=y
+""", append=True)
+```
+
+这里主要是讲 `kconfig` 这些工具可以怎么配个使用生成配置，`buildopt` 目录下就是与之配合的一些配置脚本文件。
+
+```python
+# GetLaunchDir return the directory from which the user invoked the scons command
+def makePathAbsolute(path, root=GetLaunchDir()):
+    return abspath(os.path.join(root, expanduser(str(path))))
+def makePathListAbsolute(path_list, root=GetLaunchDir()):
+    return [makePathAbsolute(p, root) for p in path_list]
+```
+
+这里定义了两个帮助函数来生成绝对路径。`GetLaunchDir` 返回 scons 的启动路径。
+
+```python
+if BUILD_TARGETS and BUILD_TARGETS[0] in kconfig_actions:
+    # The build targets are really arguments for the kconfig action.
+    kconfig_args = BUILD_TARGETS[:]
+    BUILD_TARGETS[:] = []
+
+    kconfig_action = kconfig_args[0]
+    if len(kconfig_args) < 2:
+        error(f'Missing arguments for kconfig action {kconfig_action}')
+    dir_to_configure = makePathAbsolute(kconfig_args[1])
+
+    kconfig_args = kconfig_args[2:]
+
+    variant_paths = {dir_to_configure}
+else:
+    # Each target must have 'build' in the interior of the path; the
+    # directory below this will determine the build parameters.  For
+    # example, for target 'foo/bar/build/X86/arch/x86/blah.do' we
+    # recognize that X86 specifies the configuration because it
+    # follow 'build' in the build path.
+
+    # The funky assignment to "[:]" is needed to replace the list contents
+    # in place rather than reassign the symbol to a new list, which
+    # doesn't work (obviously!).
+    BUILD_TARGETS[:] = makePathListAbsolute(BUILD_TARGETS)
+
+    # Generate a list of the unique build directories that the collected
+    # targets reference.
+    
+    # get path path-to-gem5/build/${VARIANT}
+    variant_paths = set(map(parse_build_path, BUILD_TARGETS))
+    kconfig_action = None
+```
+
+这里主要根据 target 的设置来生成后续用到的路径，我们没有使用 kconfig，于是只要考虑 else 之后的代码就行了。可以看到，这里将所有的 `BUILD_TARGETS` 都扩展为绝对路径。并将二级目录的名称设置为 `variant_paths`。
+
+```python
+########################################################################
+#
+# Set up various paths.
+#
+########################################################################
+
+# base_dir is cource code dir
+base_dir = Dir('#src').abspath
+Export('base_dir')
+
+# the ext directory should be on the #includes path
+main.Append(CPPPATH=[Dir('ext')])
+
+# Add shared top-level headers
+main.Prepend(CPPPATH=Dir('include'))
+if not GetOption('duplicate_sources'):
+    main.Prepend(CPPPATH=Dir('src'))
+```
+
+这里主要做的事是将 `src` 的绝对路径放到 `base_dir` 里，并设置头文件的查找路径。
+
+```python
+########################################################################
+#
+# Set command line options based on the configuration of the host and
+# build settings.
+#
+########################################################################
+
+# Initialize the Link-Time Optimization (LTO) flags
+main['LTO_CCFLAGS'] = []
+main['LTO_LINKFLAGS'] = []
+
+# According to the readme, tcmalloc works best if the compiler doesn't
+# assume that we're using the builtin malloc and friends. These flags
+# are compiler-specific, so we need to set them after we detect which
+# compiler we're using.
+main['TCMALLOC_CCFLAGS'] = []
+
+# main['CXX'] represents the previously selected compiler
+CXX_version = readCommand([main['CXX'], '--version'], exception=False)
+
+main['GCC'] = CXX_version and CXX_version.find('g++') >= 0
+main['CLANG'] = CXX_version and CXX_version.find('clang') >= 0
+if main['GCC'] + main['CLANG'] > 1:
+    error('Two compilers enabled at once?')
+
+# Find the gem5 binary target architecture (usually host architecture). The
+# "Target: <target>" is consistent accross gcc and clang at the time of
+# writting this.
+bin_target_arch = readCommand([main['CXX'], '--verbose'], exception=False)
+main["BIN_TARGET_ARCH"] = (
+    "x86_64"
+    if bin_target_arch.find("Target: x86_64") != -1
+    else "aarch64"
+    if bin_target_arch.find("Target: aarch64") != -1
+    else "unknown"
+)
+```
+
+为链接时优化的标记创建列表，并且此时开始获取编译器的信息，根据编译器的信息设置到底编译到什么平台上。
+
+```python
+########################################################################
+#
+# Detect and configure external dependencies.
+#
+########################################################################
+
+main['USE_PYTHON'] = not GetOption('without_python')
+
+def config_embedded_python(env):
+    # Find Python include and library directories for embedding the
+    # interpreter. We rely on python-config to resolve the appropriate
+    # includes and linker flags. If you want to link in an alternate version
+    # of python, override the PYTHON_CONFIG variable.
+
+    python_config = env.Detect(env['PYTHON_CONFIG'])
+    if python_config is None:
+        error("Can't find a suitable python-config, tried "
+              f"{env['PYTHON_CONFIG']}")
+
+    print(f"Info: Using Python config: {python_config}")
+
+    cmd = [python_config, '--ldflags', '--includes']
+
+    # Starting in Python 3.8 the --embed flag is required. Use it if supported.
+    with gem5_scons.Configure(env) as conf:
+        if conf.TryAction(f'@{python_config} --embed')[0]:
+            cmd.append('--embed')
+
+    def flag_filter(env, cmd_output, unique=True):
+        # Since this function does not use the `unique` param, one should not
+        # pass any value to this param.
+        assert(unique==True)
+        flags = cmd_output.split()
+        prefixes = ('-l', '-L', '-I')
+        is_useful = lambda x: any(x.startswith(prefix) for prefix in prefixes)
+        useful_flags = list(filter(is_useful, flags))
+        env.MergeFlags(' '.join(useful_flags))
+
+    env.ParseConfig(cmd, flag_filter)
+
+    env.Prepend(CPPPATH=Dir('ext/pybind11/include/'))
+
+    with gem5_scons.Configure(env) as conf:
+        # verify that this stuff works
+        if not conf.CheckHeader('Python.h', '<>'):
+            error("Check failed for Python.h header.\n",
+                  "Two possible reasons:\n"
+                  "1. Python headers are not installed (You can install the "
+                  "package python-dev on Ubuntu and RedHat)\n"
+                  "2. SCons is using a wrong C compiler. This can happen if "
+                  "CC has the wrong value.\n"
+                  f"CC = {env['CC']}")
+        py_version = conf.CheckPythonLib()
+        if not py_version:
+            error("Can't find a working Python installation")
+
+    # Found a working Python installation. Check if it meets minimum
+    # requirements.
+    ver_string = '.'.join(map(str, py_version))
+    if py_version[0] < 3 or (py_version[0] == 3 and py_version[1] < 6):
+        error('Embedded python library 3.6 or newer required, found '
+              f'{ver_string}.')
+    elif py_version[0] > 3:
+        warning('Embedded python library too new. '
+                f'Python 3 expected, found {ver_string}.')
+```
+
+定义了一个查找 `python-config` 的函数，这个函数进行嵌入式 python 的相关配置。
+
+```python
+#path-to-gem5/build/${VARIANT}
+for variant_path in variant_paths:
+    # Make a copy of the build-root environment to use for this config.
+    env = main.Clone()
+    env['BUILDDIR'] = variant_path
+
+    gem5_build = os.path.join(variant_path, 'gem5.build')
+    env['GEM5BUILD'] = gem5_build
+    # make dir path-to-gem5/build/${VARIANT}/gem5.build
+    Execute(Mkdir(gem5_build))
+
+    config_file = Dir(gem5_build).File('config')
+    kconfig_file = Dir(gem5_build).File('Kconfig')
+    gem5_kconfig_file = Dir('#src').File('Kconfig')
+
+    # SConsignFile we not to use 
+    env.SConsignFile(os.path.join(gem5_build, 'sconsign'))
+```
+根据多个 path 开始构建，产生一些文件，这些文件都能在构建的目录下找到。
+
+```python
+# Set up default C++ compiler flags
+    if env['GCC'] or env['CLANG']:
+        # As gcc and clang share many flags, do the common parts here
+        env.Append(CCFLAGS=['-pipe'])
+        env.Append(CCFLAGS=['-fno-strict-aliasing'])
+        # Enable -Wall and -Wextra and then disable the few warnings that
+        # we consistently violate
+        env.Append(CCFLAGS=['-Wall', '-Wundef', '-Wextra',
+                            '-Wno-sign-compare', '-Wno-unused-parameter'])
+
+        # We always compile using C++17
+        env.Append(CXXFLAGS=['-std=c++17'])
+
+        if sys.platform.startswith('freebsd'):
+            env.Append(CCFLAGS=['-I/usr/local/include'])
+            env.Append(CXXFLAGS=['-I/usr/local/include'])
+            # On FreeBSD we need libthr.
+            env.Append(LIBS=['thr'])
+
+        with gem5_scons.Configure(env) as conf:
+            conf.CheckLinkFlag('-Wl,--as-needed')
+
+        linker = GetOption('linker')
+        # choose linker
+        if linker:
+            with gem5_scons.Configure(env) as conf:
+                if not conf.CheckLinkFlag(f'-fuse-ld={linker}'):
+                    # check mold support for gcc older than 12.1.0
+                    if linker == 'mold' and \
+                       (env['GCC'] and \
+                           compareVersions(env['CXXVERSION'],
+                                           "12.1.0") < 0) and \
+                       ((isdir('/usr/libexec/mold') and \
+                           conf.CheckLinkFlag('-B/usr/libexec/mold')) or \
+                       (isdir('/usr/local/libexec/mold') and \
+                           conf.CheckLinkFlag('-B/usr/local/libexec/mold'))):
+                        pass # support mold
+                    else:
+                        error(f'Linker "{linker}" is not supported')
+                if linker == 'gold' and not GetOption('with_lto'):
+                    # Tell the gold linker to use threads. The gold linker
+                    # segfaults if both threads and LTO are enabled.
+                    conf.CheckLinkFlag('-Wl,--threads')
+                    conf.CheckLinkFlag(
+                            '-Wl,--thread-count=%d' % GetOption('num_jobs'))
+
+        with gem5_scons.Configure(env) as conf:
+            ld_optimize_memory_usage = GetOption('limit_ld_memory_usage')
+            if ld_optimize_memory_usage:
+                if conf.CheckLinkFlag('-Wl,--no-keep-memory'):
+                    env.Append(LINKFLAGS=['-Wl,--no-keep-memory'])
+                else:
+                    error("Unable to use --no-keep-memory with the linker")
+    else:
+        error('\n'.join((
+              "Don't know what compiler options to use for your compiler.",
+              "compiler: " + env['CXX'],
+              "version: " + CXX_version.replace('\n', '<nl>') if
+                    CXX_version else 'COMMAND NOT FOUND!',
+              "If you're trying to use a compiler other than GCC",
+              "or clang, there appears to be something wrong with your",
+              "environment.",
+              "",
+              "If you are trying to use a compiler other than those listed",
+              "above you will need to ease fix SConstruct and ",
+              "src/SConscript to support that compiler.")))
+```
+
+设置 gcc 和 clang 的编译时候的公共标志。
+
