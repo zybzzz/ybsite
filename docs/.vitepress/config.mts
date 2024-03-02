@@ -36,6 +36,7 @@ export default defineConfig({
               items: [
                 { text: 'metaclass and class defination in python', link: '/notes/langlearn/python/metaclass_and_class_defination'},
                 { text: 'Python function parameter parsing', link: '/notes/langlearn/python/Python_function_parameter_parsing'},
+                { text: 'Static and Runtime Name Resolution', link: '/notes/langlearn/python/Static_and_Runtime_Name_Resolution'},
                 { text: 'python import statement', link: '/notes/langlearn/python/python_import_statement'},
                 { text: 'fluent_python reading note', link: '/notes/langlearn/python/fluent_python' },
               ]
@@ -89,6 +90,25 @@ export default defineConfig({
           ]
         },
 
+        {
+          text: 'Compiler',
+          collapsed: false,
+          items: [
+            {
+              text: 'tvm',
+              collapsed: true,
+              items: [
+                {
+                  text: 'vta',
+                  collapsed: true,
+                  items: [
+                    { text: 'vta for developer', link: '/notes/compiler/tvm/vta/vta_for_developer.md' },
+                  ]
+                },
+              ]
+            },
+          ]
+        },
 
         {
           text: 'About me',
