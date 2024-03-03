@@ -138,7 +138,7 @@ Export('MakeAction')
 gem5_scons.patch_re_compile_for_inline_flags()
 ```
 
-这里从 gem5_scons 导入了很多东西， gem5_scons 位于 `root/site_scons` 下，这个目录中的 python 模块默认能够被 scons 找到，gem5_scons 中的内容大多是开发者编写的构建工具模块，在后续构建过程中都有用到。后续导出了 MakeAction 这个函数，能够供其他子脚本使用。
+这里从 gem5_scons 导入了很多东西， gem5_scons 位于 `root/site_scons` 下，这个目录中的 python 模块默认能够被 scons 找到，gem5_scons 中的内容大多是开发者编写的构建工具模块，在后续构建过程中都有用到。后续导出了 MakeAction 这个函数，能够供其他子脚本使用，这个函数对执行动作进行封装，动作可以是命令行命令，也可以是函数等等。
 
 ```python
 ########################################################################
@@ -177,7 +177,22 @@ if not ('CC' in main and 'CXX' in main):
     error("No C++ compiler installed (package g++ on Ubuntu and RedHat)")
 ```
 
-随后进行 main 环境的创建， main 是 scons 中的环境对象。在创建之后，main开始选择编译器，在选择编译器完成之后导出了 main，这里导出的 main 只是一个仅仅包含了编译器的环境。后续的 `get_termcap` 设置了终端颜色的显示，随后脚本进行编译器的检查，查看环境中是否有编译器的安装，如果没有直接打印报错，终止构建过程。
+随后进行 main 环境的创建， main 是 scons 中的环境对象，在创建 main 对象的时候会调用构造参数列表中的一系列工具对创造的环境进行设置，下简单列表介绍工具。
+
+| **工具**           | **作用**                               |
+|------------------|--------------------------------------|
+| `default`          | scons内置工具，配置默认的编程环境                  |
+| `git`              | scons内置工具，应该是git相关的工具                |
+| `TempFileSpawn`    | gem5定义，尝试使用临时文件传递命令行参数               |
+| `EnvDefaults`      | gem5定义，对默认的环境进行配置                    |
+| `MakeActionTool`   | gem5定义，主要是对执行命令时候的打印信息做配置            |
+| `ConfigFile`       | gem5定义，根据传入的参数生成配置文件，比如c语言中的#define  |
+| `AddLocalRPATH`    | gem5定义，用于相对路径的设置，使编译出的可执行文件能够找到动态链接库 |
+| `SwitchingHeaders` | gem5定义，用来生成一些头文件                     |
+| `TagImpliesTool`   | gem5定义，应用编译脚本中的tag                   |
+| `Blob`             | gem5定义，将文件嵌入到c语言中，怀疑和嵌入式 python 相关   |
+
+在创建之后，main开始选择编译器，在选择编译器完成之后导出了 main，这里导出的 main 只是一个仅仅包含了编译器的环境。后续的 `get_termcap` 设置了终端颜色的显示，随后脚本进行编译器的检查，查看环境中是否有编译器的安装，如果没有直接打印报错，终止构建过程。
 
 ```python
 # Find default configuration & binary.
@@ -556,6 +571,7 @@ for variant_path in variant_paths:
     # SConsignFile we not to use 
     env.SConsignFile(os.path.join(gem5_build, 'sconsign'))
 ```
+
 根据多个 path 开始构建，产生一些文件，这些文件都能在构建的目录下找到。
 
 ```python
@@ -627,5 +643,421 @@ for variant_path in variant_paths:
               "src/SConscript to support that compiler.")))
 ```
 
-设置 gcc 和 clang 的编译时候的公共标志。
+设置 gcc 和 clang 的编译时候的公共标志。想要这两个编译器都搜索某个库可以在这里设置。
 
+```python
+    if env['GCC']:
+        # add your lib here(gcc)
+        if compareVersions(env['CXXVERSION'], "7") < 0:
+            error('gcc version 7 or newer required.\n'
+                  'Installed version:', env['CXXVERSION'])
+
+        # Add the appropriate Link-Time Optimization (LTO) flags if
+        # `--with-lto` is set.
+        if GetOption('with_lto'):
+            # g++ uses "make" to parallelize LTO. The program can be overriden
+            # with the environment variable "MAKE", but we currently make no
+            # attempt to plumb that variable through.
+            parallelism = ''
+            if env.Detect('make'):
+                parallelism = '=%d' % GetOption('num_jobs')
+            else:
+                warning('"make" not found, link time optimization will be '
+                        'single threaded.')
+
+            for var in 'LTO_CCFLAGS', 'LTO_LINKFLAGS':
+                # Use the same amount of jobs for LTO as scons.
+                env[var] = ['-flto%s' % parallelism]
+
+        env.Append(TCMALLOC_CCFLAGS=[
+            '-fno-builtin-malloc', '-fno-builtin-calloc',
+            '-fno-builtin-realloc', '-fno-builtin-free'])
+
+        if compareVersions(env['CXXVERSION'], "9") < 0:
+            # `libstdc++fs`` must be explicitly linked for `std::filesystem``
+            # in GCC version 8. As of GCC version 9, this is not required.
+            #
+            # In GCC 7 the `libstdc++fs`` library explicit linkage is also
+            # required but the `std::filesystem` is under the `experimental`
+            # namespace(`std::experimental::filesystem`).
+            #
+            # Note: gem5 does not support GCC versions < 7.
+            env.Append(LIBS=['stdc++fs'])
+```
+
+设置与 gcc 编译器相关的标记。
+
+```
+    elif env['CLANG']:
+        # add your lib here(clang)
+        if compareVersions(env['CXXVERSION'], "6") < 0:
+            error('clang version 6 or newer required.\n'
+                  'Installed version:', env['CXXVERSION'])
+
+        # Set the Link-Time Optimization (LTO) flags if enabled.
+        if GetOption('with_lto'):
+            for var in 'LTO_CCFLAGS', 'LTO_LINKFLAGS':
+                env[var] = ['-flto']
+
+        # clang has a few additional warnings that we disable.
+        with gem5_scons.Configure(env) as conf:
+            conf.CheckCxxFlag('-Wno-c99-designator')
+            conf.CheckCxxFlag('-Wno-defaulted-function-deleted')
+
+        env.Append(TCMALLOC_CCFLAGS=['-fno-builtin'])
+
+        if compareVersions(env['CXXVERSION'], "11") < 0:
+            # `libstdc++fs`` must be explicitly linked for `std::filesystem``
+            # in clang versions 6 through 10.
+            #
+            # In addition, for these versions, the
+            # `std::filesystem` is under the `experimental`
+            # namespace(`std::experimental::filesystem`).
+            #
+            # Note: gem5 does not support clang versions < 6.
+            env.Append(LIBS=['stdc++fs'])
+
+
+        # On Mac OS X/Darwin we need to also use libc++ (part of XCode) as
+        # opposed to libstdc++, as the later is dated.
+        if sys.platform == "darwin":
+            env.Append(CXXFLAGS=['-stdlib=libc++'])
+            env.Append(LIBS=['c++'])
+
+```
+
+设置与 clang 编译器相关的标记。
+
+```python
+    if sanitizers:
+        sanitizers = ','.join(sanitizers)
+        if env['GCC'] or env['CLANG']:
+            libsan = (
+                ['-static-libubsan', '-static-libasan']
+                if env['GCC']
+                else ['-static-libsan']
+            )
+            env.Append(CCFLAGS=['-fsanitize=%s' % sanitizers,
+                                 '-fno-omit-frame-pointer'],
+                       LINKFLAGS=['-fsanitize=%s' % sanitizers] + libsan)
+
+            if main["BIN_TARGET_ARCH"] == "x86_64":
+                # Sanitizers can enlarge binary size drammatically, north of
+                # 2GB.  This can prevent successful linkage due to symbol
+                # relocation outside from the 2GB region allocated by the small
+                # x86_64 code model that is enabled by default (32-bit relative
+                # offset limitation).  Switching to the medium model in x86_64
+                # enables 64-bit relative offset for large objects (>64KB by
+                # default) while sticking to 32-bit relative addressing for
+                # code and smaller objects. Note this comes at a potential
+                # performance cost so it should not be enabled in all cases.
+                # This should still be a very happy medium for
+                # non-perf-critical sanitized builds.
+                env.Append(CCFLAGS='-mcmodel=medium')
+                env.Append(LINKFLAGS='-mcmodel=medium')
+            elif main["BIN_TARGET_ARCH"] == "aarch64":
+                # aarch64 default code model is small but with different
+                # constrains than for x86_64. With aarch64, the small code
+                # model enables 4GB distance between symbols. This is
+                # sufficient for the largest ALL/gem5.debug target with all
+                # sanitizers enabled at the time of writting this. Note that
+                # the next aarch64 code model is "large" which prevents dynamic
+                # linkage so it should be avoided when possible.
+                pass
+            else:
+                warning(
+                    "Unknown code model options for your architecture. "
+                    "Linkage might fail for larger binaries "
+                    "(e.g., ALL/gem5.debug with sanitizers enabled)."
+                )
+        else:
+            warning("Don't know how to enable %s sanitizer(s) for your "
+                    "compiler." % sanitizers)
+
+    if sys.platform == 'cygwin':
+        # cygwin has some header file issues...
+        env.Append(CCFLAGS=["-Wno-uninitialized"])
+
+
+    if not GetOption('no_compress_debug'):
+        with gem5_scons.Configure(env) as conf:
+            if not conf.CheckCxxFlag('-gz'):
+                warning("Can't enable object file debug section compression")
+            if not conf.CheckLinkFlag('-gz'):
+                warning("Can't enable executable debug section compression")
+
+```
+
+主要进行了以下的工作：
+
+1. 启用代码分析器（Sanitizers）:
+    - 如果指定了代码分析器（例如内存泄漏检测器、未定义行为检测器等），它会将这些分析器的选项添加到编译器和链接器的标志中。
+    - 对于GCC和Clang编译器，它会添加 -fsanitize 标志以及一些特定的库标志（如 -static-libasan 用于地址分析器）。
+    - 对于 x86_64 架构，如果启用了分析器，可能会增加二进制文件的大小，超过2GB。为了解决这个问题，它会使用 -mcmodel=medium 标志来扩展符号的可寻址范围。
+    - 对于 aarch64 架构，它不需要额外的代码模型标志，因为默认的小代码模型已经足够。
+2. 平台特定的设置:
+    - 对于Cygwin平台，由于存在一些头文件问题，它会添加 -Wno-uninitialized 标志来禁用未初始化警告。
+3. 调试节压缩:
+    - 如果没有通过 no_compress_debug 选项禁用，它会检查编译器和链接器是否支持调试节压缩（通过 -gz 标志）。如果不支持，会发出警告。
+
+```python
+    if env['USE_PYTHON']:
+        config_embedded_python(env)
+        gem5py_env = env.Clone()
+    else:
+        gem5py_env = env.Clone()
+        config_embedded_python(gem5py_env)
+
+    # Bare minimum environment that only includes python
+    # support embed python
+    gem5py_env.Append(CCFLAGS=['${GEM5PY_CCFLAGS_EXTRA}'])
+    gem5py_env.Append(LINKFLAGS=['${GEM5PY_LINKFLAGS_EXTRA}'])
+
+    # perf tool
+    if GetOption('gprof') and GetOption('pprof'):
+        error('Only one type of profiling should be enabled at a time')
+    if GetOption('gprof'):
+        env.Append(CCFLAGS=['-g', '-pg'], LINKFLAGS=['-pg'])
+    if GetOption('pprof'):
+        env.Append(CCFLAGS=['-g'],
+                LINKFLAGS=['-Wl,--no-as-needed', '-lprofiler',
+                    '-Wl,--as-needed'])
+```
+
+配置嵌入式 python 的环境，添加性能分析工具所需的编译器标记。
+
+```python
+    env['HAVE_PKG_CONFIG'] = env.Detect('pkg-config') == 'pkg-config'
+    # support use of pkg-config
+    with gem5_scons.Configure(env) as conf:
+        # On Solaris you need to use libsocket for socket ops
+        if not conf.CheckLibWithHeader(
+                [None, 'socket'], 'sys/socket.h', 'C++', 'accept(0,0,0);'):
+           error("Can't find library with socket calls (e.g. accept()).")
+
+        if not conf.CheckLibWithHeader('z', 'zlib.h', 'C++','zlibVersion();'):
+            error('Did not find needed zlib compression library '
+                  'and/or zlib.h header file.\n'
+                  'Please install zlib and try again.')
+
+    if not GetOption('without_tcmalloc'):
+        with gem5_scons.Configure(env) as conf:
+            if conf.CheckLib('tcmalloc_minimal'):
+                conf.env.Append(CCFLAGS=conf.env['TCMALLOC_CCFLAGS'])
+            elif conf.CheckLib('tcmalloc'):
+                conf.env.Append(CCFLAGS=conf.env['TCMALLOC_CCFLAGS'])
+            else:
+                warning("You can get a 12% performance improvement by "
+                        "installing tcmalloc (libgoogle-perftools-dev package "
+                        "on Ubuntu or RedHat).")
+
+    if not GetOption('silent'):
+        print("Building in", variant_path)
+```
+
+根据传入的参数和配置信息，进行库的检查。
+
+```python
+    # variant_dir is the tail component of build path, and is used to
+    # determine the build parameters (e.g., 'X86')
+    
+    # split to  build_root:path-to-gem5/build/  variant_dir:${VARIANT}
+    (build_root, variant_dir) = os.path.split(variant_path)
+```
+
+将路径得到分割，最后得到的路径结果是 `build_root:path-to-gem5/build/  variant_dir:${VARIANT}`。
+
+```python
+    # Register a callback to call after all SConsopts files have been read.
+    # use can set callback function(after execute )
+    after_sconsopts_callbacks = []
+    def AfterSConsopts(cb):
+        after_sconsopts_callbacks.append(cb)
+    Export('AfterSConsopts')
+```
+
+注册 sconsopts 执行完成之后的回调函数。
+
+```python
+    # config in path-to-gem5/build/extras
+    extras_file = os.path.join(gem5_build, 'extras')
+    # get config in path-to-gem5/build/extras, then override by command line argument
+    extras_var = Variables(extras_file, args=ARGUMENTS)
+
+    # user can add extra directories here
+    extras_var.Add(('EXTRAS', 'Add extra directories to the compilation', ''))
+
+    # Apply current settings for EXTRAS to env.
+    # command line args also apply to env too
+    extras_var.Update(env)
+
+    # Parse EXTRAS variable to build list of all directories where we're
+    # look for sources etc.  This list is exported as extras_dir_list.
+    if env['EXTRAS']:
+        extras_dir_list = makePathListAbsolute(env['EXTRAS'].split(':'))
+    else:
+        extras_dir_list = []
+
+    Export('extras_dir_list')
+```
+
+设置额外的外部文件的查找路径。
+
+```python
+    # Generate a Kconfig that will source the main gem5 one, and any in any
+    # EXTRAS directories.
+    # not use kconfig
+    kconfig_base_py = Dir('#build_tools').File('kconfig_base.py')
+    kconfig_base_cmd_parts = [f'"{kconfig_base_py}" "{kconfig_file.abspath}"',
+            f'"{gem5_kconfig_file.abspath}"']
+    for ed in extras_dir_list:
+        kconfig_base_cmd_parts.append(f'"{ed}"')
+    kconfig_base_cmd = ' '.join(kconfig_base_cmd_parts)
+    if env.Execute(kconfig_base_cmd) != 0:
+        error("Failed to build base Kconfig file")
+```
+
+生成 Kconfig。
+
+```python
+    # Variables which were determined with Configure.
+    env['CONF'] = {}
+
+    # Walk the tree and execute all SConsopts scripts that wil add to the
+    # above variables
+    if GetOption('verbose'):
+        print("Reading SConsopts")
+
+    def trySConsopts(dir):
+        sconsopts_path = os.path.join(dir, 'SConsopts')
+        if not isfile(sconsopts_path):
+            return
+        if GetOption('verbose'):
+            print("Reading", sconsopts_path)
+        SConscript(sconsopts_path, exports={'main': env})
+
+    # execute SConsopts file in path-to-gem5
+    trySConsopts(Dir('#').abspath)
+    # execute SConsopts file in path-to-gem5/extras_dir_list
+    for bdir in [ base_dir ] + extras_dir_list:
+        if not isdir(bdir):
+            error("Directory '%s' does not exist." % bdir)
+        for root, dirs, files in os.walk(bdir):
+            trySConsopts(root)
+
+    # Call any callbacks which the SConsopts files registered.
+    for cb in after_sconsopts_callbacks:
+        cb()
+```
+
+对于 SConsopts 文件，有如下解释：
+
+> `SConsopts` 文件是一个特殊的文件，用于存储 SCons 构建系统的全局配置选项。当你在命令行上运行 SCons 时，SCons 会自动查找当前目录及其父目录中名为 `SConsopts` 的文件，并从中读取配置选项。这些选项会影响 SCons 的行为，例如设置默认的构建目标、指定构建缓存的位置、调整并行构建的线程数等。
+
+读取 SConsopts 文件，进行一些 scons 全局参数的设置。
+
+```python
+    # Handle any requested kconfig action, then exit.
+    # not use kconfig
+    if kconfig_action:
+        if kconfig_action == 'defconfig':
+            if len(kconfig_args) != 1:
+                error('Usage: scons defconfig <build dir> <defconfig file>')
+            defconfig_path = makePathAbsolute(kconfig_args[0])
+            kconfig.defconfig(env, kconfig_file.abspath,
+                    defconfig_path, config_file.abspath)
+        elif kconfig_action == 'guiconfig':
+            kconfig.guiconfig(env, kconfig_file.abspath, config_file.abspath,
+                    variant_path)
+        elif kconfig_action == 'listnewconfig':
+            kconfig.listnewconfig(env, kconfig_file.abspath,
+                    config_file.abspath)
+        elif kconfig_action == 'menuconfig':
+            kconfig.menuconfig(env, kconfig_file.abspath, config_file.abspath,
+                    variant_path)
+        elif kconfig_action == 'oldconfig':
+            kconfig.oldconfig(env, kconfig_file.abspath, config_file.abspath)
+        elif kconfig_action == 'olddefconfig':
+            kconfig.olddefconfig(env, kconfig_file.abspath,
+                    config_file.abspath)
+        elif kconfig_action == 'savedefconfig':
+            if len(kconfig_args) != 1:
+                error('Usage: scons defconfig <build dir> <defconfig file>')
+            defconfig_path = makePathAbsolute(kconfig_args[0])
+            kconfig.savedefconfig(env, kconfig_file.abspath,
+                    config_file.abspath, defconfig_path)
+        elif kconfig_action == 'setconfig':
+            kconfig.setconfig(env, kconfig_file.abspath, config_file.abspath,
+                    ARGUMENTS)
+        Exit(0)
+
+    # If no config exists yet, see if we know how to make one?
+    # just kconfig read variable in build_opts
+    if not isfile(config_file.abspath):
+        buildopts_file = Dir('#build_opts').File(variant_dir)
+        if not isfile(buildopts_file.abspath):
+            error('No config found, and no implicit config recognized')
+        kconfig.defconfig(env, kconfig_file.abspath, buildopts_file.abspath,
+                config_file.abspath)
+
+    kconfig.update_env(env, kconfig_file.abspath, config_file.abspath)
+```
+
+进行 kconfig 操作。
+
+```python
+    # Do this after we save setting back, or else we'll tack on an
+    # extra 'qdo' every time we run scons.
+    if env['CONF']['BATCH']:
+        env['CC']     = env['CONF']['BATCH_CMD'] + ' ' + env['CC']
+        env['CXX']    = env['CONF']['BATCH_CMD'] + ' ' + env['CXX']
+        env['AS']     = env['CONF']['BATCH_CMD'] + ' ' + env['AS']
+        env['AR']     = env['CONF']['BATCH_CMD'] + ' ' + env['AR']
+        env['RANLIB'] = env['CONF']['BATCH_CMD'] + ' ' + env['RANLIB']
+
+    # Cache build files in the supplied directory.
+    if env['CONF']['M5_BUILD_CACHE']:
+        print('Using build cache located at', env['CONF']['M5_BUILD_CACHE'])
+        CacheDir(env['CONF']['M5_BUILD_CACHE'])
+
+
+    env.Append(CCFLAGS='$CCFLAGS_EXTRA')
+    env.Append(LINKFLAGS='$LINKFLAGS_EXTRA')
+```
+
+重新设置代码环境中的一些参数。
+
+```python
+    # env is comprehensive environment
+    # gem5py_env is environment support c/cpp/python
+    exports=['env', 'gem5py_env']
+
+    # first to build ext(external)
+    ext_dir = Dir('#ext').abspath
+    variant_ext = os.path.join(variant_path, 'ext')
+    for root, dirs, files in os.walk(ext_dir):
+        if 'SConscript' in files:
+            build_dir = os.path.relpath(root, ext_dir)
+            SConscript(os.path.join(root, 'SConscript'),
+                       variant_dir=os.path.join(variant_ext, build_dir), 
+                       exports=exports, #exports variable can use in ext scons
+                       duplicate=GetOption('duplicate_sources'))
+
+    # The src/SConscript file sets up the build rules in 'env' according
+    # to the configured variables.  It returns a list of environments,
+    # one for each variant build (debug, opt, etc.)
+    
+    # go to src/SConscript
+    SConscript('src/SConscript', variant_dir=variant_path, exports=exports,
+               duplicate=GetOption('duplicate_sources'))
+```
+
+导出环境，并开始向各个子目录下执行 scons 脚本，先是 `ext` 目录， 再是 `src` 目录。
+
+
+```python
+# print warning after exit
+atexit.register(summarize_warnings)
+```
+
+在整个过程执行完成之后打印警告信息并退出。
