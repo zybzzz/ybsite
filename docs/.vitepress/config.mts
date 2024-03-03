@@ -2,6 +2,9 @@ import { defineConfig } from 'vitepress'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
+    markdown: {
+      math: true
+    },
     base: '/ybsite/',
     lastUpdated: true,
     title: "Yibo Zhang's site",
@@ -105,6 +108,14 @@ export default defineConfig({
                     { text: 'vta for developer', link: '/notes/compiler/tvm/vta/vta_for_developer.md' },
                   ]
                 },
+              ]
+            },
+
+            {
+              text: 'dragon book',
+              collapsed: true,
+              items: [
+                { text: 'Lexical Analysis Handout', link: '/notes/compiler/dragonbook/Lexical_Analysis_Handout'},
               ]
             },
           ]
