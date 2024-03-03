@@ -114,6 +114,7 @@ export default defineConfig({
             {
               text: 'dragon book',
               collapsed: true,
+              link:'/notes/compiler/dragonbook/',
               items: [
                 { text: 'Lexical Analysis Handout', link: '/notes/compiler/dragonbook/Lexical_Analysis_Handout'},
               ]
