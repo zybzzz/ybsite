@@ -123,6 +123,14 @@ export default defineConfig({
         },
 
         {
+          text: 'computer-arch lab, spring 24, USTC',
+          collapsed: false,
+          items: [
+            { text: 'lab1: running and try to use gem5', link: '/ybsite/ca2024/lab1-doc.pdf'},
+          ]
+        },
+
+        {
           text: 'About me',
           collapsed: false,
           items: [
