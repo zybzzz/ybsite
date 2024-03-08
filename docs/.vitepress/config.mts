@@ -51,6 +51,19 @@ export default defineConfig({
                 { text: 'python import statement', link: '/notes/langlearn/python/python_import_statement'},
                 { text: 'fluent_python reading note', link: '/notes/langlearn/python/fluent_python' },
               ]
+            },
+            { //level2
+              text: 'cpp',
+              collapsed: true,
+              items: [
+                { //level2
+                  text: 'beginning c++20',
+                  collapsed: true,
+                  items: [
+                    { text: 'ch2 basic type', link: '/notes/langlearn/cpp/beginning-cpp20/ch2_basic_type'},
+                  ]
+                }
+              ]
             }
           ]
         },
