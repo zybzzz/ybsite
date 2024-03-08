@@ -126,6 +126,7 @@ export default defineConfig({
               items: [
                 { text: 'Lexical Analysis Handout', link: '/notes/compiler/dragonbook/Lexical_Analysis_Handout'},
                 { text: 'Syntax Analysis Handout', link: '/notes/compiler/dragonbook/Syntax_Analysis_Handout'},
+                { text: 'Syntax-Direted Translation Handout', link: '/notes/compiler/dragonbook/Syntax-Direted_Translation_Handout'},
               ]
             },
           ]
