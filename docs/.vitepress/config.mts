@@ -61,6 +61,7 @@ export default defineConfig({
                   collapsed: true,
                   items: [
                     { text: 'ch2 basic type', link: '/notes/langlearn/cpp/beginning-cpp20/ch2_basic_type'},
+                    { text: 'ch3 Dealing with basic data types', link: '/notes/langlearn/cpp/beginning-cpp20/ch3_Dealing_with_basic_data_types'},
                   ]
                 }
               ]
