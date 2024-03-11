@@ -65,6 +65,7 @@ export default defineConfig({
                     { text: 'ch4 Control Flow', link: '/notes/langlearn/cpp/beginning-cpp20/ch4_control_flow'},
                     { text: 'ch5 Arrays and Loops', link: '/notes/langlearn/cpp/beginning-cpp20/ch5_Arrays_and_Loops'},
                     { text: 'ch6 Pointers & References', link: '/notes/langlearn/cpp/beginning-cpp20/ch6_Pointers_and_References'},
+                    { text: 'ch7 string', link: '/notes/langlearn/cpp/beginning-cpp20/ch7_string'},
                   ]
                 }
               ]
