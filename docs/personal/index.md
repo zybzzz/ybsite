@@ -1,5 +1,7 @@
 # About me
 
+![](/me.jpg)
+
 Hi 🤗 , I am Yibo Zhang. I am currently a first year master student in the School of Computer Science and Technology at the University of Science and Technology of China. Before that, I got my bachelor's degree from Zhejiang Gongshang University. I would like to record some of my learning process here.
 
 Keep going!
