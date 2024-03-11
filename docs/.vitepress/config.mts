@@ -67,6 +67,7 @@ export default defineConfig({
                     { text: 'ch6 Pointers & References', link: '/notes/langlearn/cpp/beginning-cpp20/ch6_Pointers_and_References'},
                     { text: 'ch7 string', link: '/notes/langlearn/cpp/beginning-cpp20/ch7_string'},
                     { text: 'ch8 function', link: '/notes/langlearn/cpp/beginning-cpp20/ch8_function'},
+                    { text: 'ch9 vocabulary types', link: '/notes/langlearn/cpp/beginning-cpp20/ch9_vocabulary_types'},
                   ]
                 }
               ]
