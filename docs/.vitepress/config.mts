@@ -71,6 +71,7 @@ export default defineConfig({
                     { text: 'ch11 module', link: '/notes/langlearn/cpp/beginning-cpp20/ch11_module'},
                     { text: 'ch12 define a class', link: '/notes/langlearn/cpp/beginning-cpp20/ch12_define_a_class'},
                     { text: 'ch13 operator overloading', link: '/notes/langlearn/cpp/beginning-cpp20/ch13_operator_overloading'},
+                    { text: 'ch14 inheritance', link: '/notes/langlearn/cpp/beginning-cpp20/ch14_inheritance'},
                   ]
                 }
               ]
