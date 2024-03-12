@@ -69,6 +69,7 @@ export default defineConfig({
                     { text: 'ch8 function', link: '/notes/langlearn/cpp/beginning-cpp20/ch8_function'},
                     { text: 'ch9 vocabulary types', link: '/notes/langlearn/cpp/beginning-cpp20/ch9_vocabulary_types'},
                     { text: 'ch11 module', link: '/notes/langlearn/cpp/beginning-cpp20/ch11_module'},
+                    { text: 'ch12 define a class', link: '/notes/langlearn/cpp/beginning-cpp20/ch12_define_a_class'},
                   ]
                 }
               ]
