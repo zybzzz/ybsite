@@ -74,6 +74,7 @@ export default defineConfig({
                     { text: 'ch14 inheritance', link: '/notes/langlearn/cpp/beginning-cpp20/ch14_inheritance'},
                     { text: 'ch15 polymorphism', link: '/notes/langlearn/cpp/beginning-cpp20/ch15_polymorphism'},
                     { text: 'ch16 exception', link: '/notes/langlearn/cpp/beginning-cpp20/ch16_exception'},
+                    { text: 'ch17 template', link: '/notes/langlearn/cpp/beginning-cpp20/ch17_template'},
                   ]
                 }
               ]
