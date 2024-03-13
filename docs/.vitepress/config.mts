@@ -73,6 +73,7 @@ export default defineConfig({
                     { text: 'ch13 operator overloading', link: '/notes/langlearn/cpp/beginning-cpp20/ch13_operator_overloading'},
                     { text: 'ch14 inheritance', link: '/notes/langlearn/cpp/beginning-cpp20/ch14_inheritance'},
                     { text: 'ch15 polymorphism', link: '/notes/langlearn/cpp/beginning-cpp20/ch15_polymorphism'},
+                    { text: 'ch16 exception', link: '/notes/langlearn/cpp/beginning-cpp20/ch16_exception'},
                   ]
                 }
               ]
