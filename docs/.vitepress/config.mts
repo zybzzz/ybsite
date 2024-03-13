@@ -75,6 +75,7 @@ export default defineConfig({
                     { text: 'ch15 polymorphism', link: '/notes/langlearn/cpp/beginning-cpp20/ch15_polymorphism'},
                     { text: 'ch16 exception', link: '/notes/langlearn/cpp/beginning-cpp20/ch16_exception'},
                     { text: 'ch17 template', link: '/notes/langlearn/cpp/beginning-cpp20/ch17_template'},
+                    { text: 'ch19 first-class function', link: '/notes/langlearn/cpp/beginning-cpp20/ch19_first-class_function'},
                   ]
                 }
               ]
