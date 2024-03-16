@@ -42,6 +42,19 @@ export default defineConfig({
           ]
         },
 
+        {
+          text: 'Paper Reading',
+          collapsed: false,
+          items: [
+            { //level2
+              text: 'sim',
+              collapsed: true,
+              items: [
+                { text: 'ISPASS\'14 Simulating DRAM controllers for future arch', link: '/notes/paper-reading/sim/Simulating-DRAM-controllers-for-future-system-architecture-exploration'},
+              ]
+            }
+          ]
+        },
 
         {
           text: 'Computer Architecture',
