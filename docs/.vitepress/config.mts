@@ -152,6 +152,7 @@ export default defineConfig({
                   collapsed: true,
                   items: [
                     { text: 'extensible.hh', link: '/notes/sim/gem5src/base/extensible_hh' },
+                    { text: 'request & packet', link: '/notes/sim/gem5src/base/req_pac' },
                   ]
                 },
               ]
