@@ -155,6 +155,14 @@ export default defineConfig({
                     { text: 'request & packet', link: '/notes/sim/gem5src/base/req_pac' },
                   ]
                 },
+
+                { //level3
+                  text: 'mem',
+                  collapsed: true,
+                  items: [
+                    { text: 'port.hh', link: '/notes/sim/gem5src/mem/port_hh' },
+                  ]
+                },
               ]
             },
           ]
