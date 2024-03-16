@@ -126,6 +126,20 @@ export default defineConfig({
                 { text: 'gem5 event driven programming', link: '/notes/sim/gem5/event_driven_programming' },
               ]
             },
+
+            { //level2
+              text: 'source code of gem5',
+              collapsed: true,
+              items: [
+                { //level3
+                  text: 'base',
+                  collapsed: true,
+                  items: [
+                    { text: 'extensible.hh', link: '/notes/sim/gem5src/base/extensible_hh' },
+                  ]
+                },
+              ]
+            },
           ]
         },
 
