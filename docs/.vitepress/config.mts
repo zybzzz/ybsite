@@ -27,6 +27,22 @@ export default defineConfig({
         //     { text: 'Runtime API Examples', link: '/api-examples' }
         //   ]
         // },
+
+        {
+          text: 'Life & Diary',
+          collapsed: false,
+          items: [
+            { //level2
+              text: '2024',
+              collapsed: true,
+              items: [
+                { text: '连续两天的深夜奋斗', link: '/life/2024/20240317'},
+              ]
+            }
+          ]
+        },
+
+
         {
           text: 'Computer Architecture',
           collapsed: false,
