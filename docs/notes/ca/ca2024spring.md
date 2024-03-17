@@ -9,3 +9,7 @@ _in development!_
 ## 实验文档链接
 
 [lab1: running and try to use gem5](/ca2024/lab1-doc.pdf)
+
+## 其他
+
+[Tips on using gem5](/ca2024/lab1-pre.pdf)
