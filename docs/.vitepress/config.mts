@@ -167,6 +167,7 @@ export default defineConfig({
                   items: [
                     { text: 'extensible.hh', link: '/notes/sim/gem5src/base/extensible_hh' },
                     { text: 'request & packet', link: '/notes/sim/gem5src/base/req_pac' },
+                    { text: 'callback.hh', link: '/notes/sim/gem5src/base/callback_hh' },
                   ]
                 },
 
@@ -175,6 +176,7 @@ export default defineConfig({
                   collapsed: true,
                   items: [
                     { text: 'port.hh', link: '/notes/sim/gem5src/mem/port_hh' },
+                    { text: 'backdoor.hh', link: '/notes/sim/gem5src/mem/backdoor_hh' },
                   ]
                 },
 
