@@ -149,6 +149,7 @@ export default defineConfig({
               text: 'gem5 simulator',
               collapsed: true,
               items: [
+                { text: 'gem5 archtecture', link: '/notes/sim/gem5/arch' },
                 { text: 'gem5 build process analysis', link: '/notes/sim/gem5/build_process_analysis' },
                 { text: 'gem5 simobject source code analysis', link: '/notes/sim/gem5/simobject_source_code_analysis' },
                 { text: 'gem5 gem5 startup process', link: '/notes/sim/gem5/gem5_startup_process' },
@@ -176,6 +177,23 @@ export default defineConfig({
                     { text: 'port.hh', link: '/notes/sim/gem5src/mem/port_hh' },
                   ]
                 },
+
+                { //level3
+                  text: 'configs',
+                  collapsed: true,
+                  items: [
+                    { text: 'overview of all config files', link: '/notes/sim/gem5src/configs/overview' },
+                  ]
+                },
+                
+                { //level3
+                  text: 'cpu',
+                  collapsed: true,
+                  items: [
+                    { text: 'pc_event', link: '/notes/sim/gem5src/cpu/pc_event' },
+                  ]
+                },
+
               ]
             },
           ]
