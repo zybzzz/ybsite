@@ -199,6 +199,20 @@ export default defineConfig({
                   ]
                 },
 
+                { //level3
+                  text: 'arch',
+                  collapsed: true,
+                  items: [
+                    { //level3
+                      text: 'generic',
+                      collapsed: true,
+                      items: [
+                        { text: 'pcstate.hh', link: '/notes/sim/gem5src/cpu/generic/pcstate_hh' },
+                      ]
+                    },
+                  ]
+                },
+
               ]
             },
           ]
