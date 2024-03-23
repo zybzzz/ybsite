@@ -37,6 +37,7 @@ export default defineConfig({
               collapsed: true,
               items: [
                 { text: '连续两天的深夜奋斗', link: '/life/2024/20240317'},
+                { text: '一个魔幻的周末', link: '/life/2024/20240323'},
               ]
             }
           ]
