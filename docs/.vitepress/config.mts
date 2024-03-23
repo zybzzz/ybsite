@@ -200,6 +200,15 @@ export default defineConfig({
                 },
 
                 { //level3
+                  text: 'sim',
+                  collapsed: true,
+                  items: [
+                    { text: 'System.hh', link: '/notes/sim/gem5src/sim/System_hh' },
+                  ]
+                },
+
+
+                { //level3
                   text: 'arch',
                   collapsed: true,
                   items: [
