@@ -169,6 +169,7 @@ export default defineConfig({
                     { text: 'extensible.hh', link: '/notes/sim/gem5src/base/extensible_hh' },
                     { text: 'request & packet', link: '/notes/sim/gem5src/base/req_pac' },
                     { text: 'callback.hh', link: '/notes/sim/gem5src/base/callback_hh' },
+                    { text: 'debug.hh', link: '/notes/sim/gem5src/base/debug_hh' },
                   ]
                 },
 
