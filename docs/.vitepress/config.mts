@@ -178,6 +178,7 @@ export default defineConfig({
                   items: [
                     { text: 'port.hh', link: '/notes/sim/gem5src/mem/port_hh' },
                     { text: 'backdoor.hh', link: '/notes/sim/gem5src/mem/backdoor_hh' },
+                    { text: 'abstract_mem.hh', link: '/notes/sim/gem5src/mem/abstract_mem_hh' },
                   ]
                 },
 
