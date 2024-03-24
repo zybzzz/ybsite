@@ -180,6 +180,7 @@ export default defineConfig({
                     { text: 'port.hh', link: '/notes/sim/gem5src/mem/port_hh' },
                     { text: 'backdoor.hh', link: '/notes/sim/gem5src/mem/backdoor_hh' },
                     { text: 'abstract_mem.hh', link: '/notes/sim/gem5src/mem/abstract_mem_hh' },
+                    { text: 'physical.hh', link: '/notes/sim/gem5src/mem/physical_hh' },
                   ]
                 },
 
@@ -204,6 +205,7 @@ export default defineConfig({
                   collapsed: true,
                   items: [
                     { text: 'System.hh', link: '/notes/sim/gem5src/sim/System_hh' },
+                    { text: 'process.hh', link: '/notes/sim/gem5src/sim/process_hh' },
                   ]
                 },
 
