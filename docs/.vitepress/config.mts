@@ -197,6 +197,7 @@ export default defineConfig({
                   collapsed: true,
                   items: [
                     { text: 'pc_event', link: '/notes/sim/gem5src/cpu/pc_event' },
+                    { text: 'reg_class.hh', link: '/notes/sim/gem5src/cpu/reg_class_hh' },
                   ]
                 },
 
