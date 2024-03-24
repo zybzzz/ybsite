@@ -206,6 +206,7 @@ export default defineConfig({
                   items: [
                     { text: 'System.hh', link: '/notes/sim/gem5src/sim/System_hh' },
                     { text: 'process.hh', link: '/notes/sim/gem5src/sim/process_hh' },
+                    { text: 'fd_entry & fd_array', link: '/notes/sim/gem5src/sim/fd_entry_hh' },
                   ]
                 },
 
