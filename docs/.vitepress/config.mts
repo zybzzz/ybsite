@@ -221,6 +221,7 @@ export default defineConfig({
                       collapsed: true,
                       items: [
                         { text: 'pcstate.hh', link: '/notes/sim/gem5src/cpu/generic/pcstate_hh' },
+                        { text: 'decoder & decoder cache', link: '/notes/sim/gem5src/cpu/generic/decoder_and_decodercache' },
                       ]
                     },
                   ]
