@@ -175,6 +175,7 @@ export default defineConfig({
               { text: 'gem5 simobject source code analysis', link: '/notes/sim/gem5/simobject_source_code_analysis' },
               { text: 'gem5 gem5 startup process', link: '/notes/sim/gem5/gem5_startup_process' },
               { text: 'gem5 event driven programming', link: '/notes/sim/gem5/event_driven_programming' },
+              { text: 'ISA  independence in gem5', link: '/notes/sim/gem5/isa_independence' },
             ]
           },
 
