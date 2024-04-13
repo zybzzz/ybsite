@@ -10,3 +10,4 @@ Of course the table of contents and selected articles are also given below.
 
 - [⭐⭐⭐ gem5 build process analysis](./sim/gem5/build_process_analysis)
 - [⭐⭐⭐ gem5 ISA dependence](./sim/gem5/isa_independence.md)
+- [⭐⭐⭐ SimObject creation in gem5](./sim/gem5/simobj_creation.md)
