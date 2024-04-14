@@ -178,7 +178,9 @@ export default defineConfig({
               { text: 'ISA independence in gem5', link: '/notes/sim/gem5/isa_independence' },
               { text: 'SimObject creation in gem5', link: '/notes/sim/gem5/simobj_creation' },
               { text: 'gem5 debug tips', link: '/notes/sim/gem5/gem5_debugtips' },
+              { text: 'first instruction run in SE mode', link: '/notes/sim/gem5/first_inst_runse' },
               { text: 'gem5 cpu model', link: '/notes/sim/gem5/cpu_model' },
+              { text: '_m5 in gem5', link: '/notes/sim/gem5/_m5_gem5' },
             ]
           },
 
