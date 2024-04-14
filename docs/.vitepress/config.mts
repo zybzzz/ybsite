@@ -173,10 +173,11 @@ export default defineConfig({
               { text: 'gem5 archtecture', link: '/notes/sim/gem5/arch' },
               { text: 'gem5 build process analysis', link: '/notes/sim/gem5/build_process_analysis' },
               { text: 'gem5 simobject source code analysis', link: '/notes/sim/gem5/simobject_source_code_analysis' },
-              { text: 'gem5 gem5 startup process', link: '/notes/sim/gem5/gem5_startup_process' },
+              { text: 'gem5 startup process', link: '/notes/sim/gem5/gem5_startup_process' },
               { text: 'gem5 event driven programming', link: '/notes/sim/gem5/event_driven_programming' },
               { text: 'ISA independence in gem5', link: '/notes/sim/gem5/isa_independence' },
               { text: 'SimObject creation in gem5', link: '/notes/sim/gem5/simobj_creation' },
+              { text: 'gem5 debug tips', link: '/notes/sim/gem5/gem5_debugtips' },
               { text: 'gem5 cpu model', link: '/notes/sim/gem5/cpu_model' },
             ]
           },
