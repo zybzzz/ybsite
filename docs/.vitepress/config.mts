@@ -181,6 +181,7 @@ export default defineConfig({
               { text: 'first instruction run in SE mode', link: '/notes/sim/gem5/first_inst_runse' },
               { text: 'gem5 cpu model', link: '/notes/sim/gem5/cpu_model' },
               { text: '_m5 in gem5', link: '/notes/sim/gem5/_m5_gem5' },
+              { text: 'ThreadContext vs ExecContext', link: '/notes/sim/gem5/tcvsec' },
             ]
           },
 
