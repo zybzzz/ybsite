@@ -32,3 +32,13 @@ $$ TFetch = \left\{ \begin{array}{ll} CacheAccessTime & \text{if in cache} , \\ 
 $$ TExecute = \left\{ \begin{array}{ll} 0 & \text{if exe inst} , \\ CacheAccessTime & \text{if mem inst and in cache} , \\MemAccessTime & \text{if mem inst and not in cache}. \end{array} \right. $$
 
 需要注意的是 $TExecute$ 在指令为计算型指令的时候为 $0$，这是因为 TimingSimpleCPU 设计时候不考虑计算指令执行的时间，默认 CPU 微架构中的计算资源无限。
+
+## AtomicSimpleCPU
+
+AtomicSimpleCPU 一般是用来进行验证功能或者加速全系统仿真用的，所以考虑其 cpu 相关的统计数据是没有意义的，只需要对这个东西的大致执行流程有所了解就行了。AtomicSimpleCPU 支持指令发射宽度的设置，但是不认为这种宽度会加速模拟，我认为甚至可能减慢。
+
+对于执行的流程直接参考官网的图片：
+
+![AtomicSimpleCPU执行流程](https://www.gem5.org/assets/img/AtomicSimpleCPU.jpg)
+
+对这个模型没什么好说的。

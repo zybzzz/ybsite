@@ -255,7 +255,7 @@ class Template:
 
 在历经 `src/arch/arm/isa/templates` 和 `src/arch/arm/isa/insts` 两步之后，所有的 ARM ISA 都已经被转化成了 gem5 中 `StaticInst` 的子类，接下来要解决的就是译码问题，也就是说，在遇到某一条机器指令的时候，应该返回给 gem5 的是哪个具体的 `StaticInst` 类。实现这个译码过程的是 `src/arch/arm/isa/decoder` 和 `src/arch/arm/isa/formats` 两个部分，`src/arch/arm/isa/decoder` 属于更高层次的译码，其中会调用 `src/arch/arm/isa/formats` 中定义的方法，两部分相互配合完成译码的过程。
 
-`src/arch/arm/isa/decoder` 用的是很像 `switch ... case ... ` 的一种语言来进行译码过程的定义，事实也是如此，这部分在后来确实转换成 cpp 实现中的`switch ... case ... ` 语句。在 `src/arch/arm/isa/decoder` 中会调用 `src/arch/arm/isa/formats` 文件中的方法，这些方法被嵌入在译码器中，实际上提供了返回相应 `StaticInst` 的正确实现。以 `src/arch/arm/isa/decoder/arm.isa` 中出现的 `0: ArmDataProcReg::armDataProcReg();` 为例，在 `src/arch/arm/isa/formats/data.isa` 中定义了这个 `ArmDataProcReg` 类，其代码如下：
+`src/arch/arm/isa/decoder` 用的是很像 `switch ... case ...` 的一种语言来进行译码过程的定义，事实也是如此，这部分在后来确实转换成 cpp 实现中的`switch ... case ...` 语句。在 `src/arch/arm/isa/decoder` 中会调用 `src/arch/arm/isa/formats` 文件中的方法，这些方法被嵌入在译码器中，实际上提供了返回相应 `StaticInst` 的正确实现。以 `src/arch/arm/isa/decoder/arm.isa` 中出现的 `0: ArmDataProcReg::armDataProcReg();` 为例，在 `src/arch/arm/isa/formats/data.isa` 中定义了这个 `ArmDataProcReg` 类，其代码如下：
 
 ```python
 def format ArmDataProcReg() {{
@@ -351,3 +351,7 @@ def format ArmDataProcReg() {{
 其定义了很多的多行字符串，一看就是用来进行代码生成的，不过这里的代码生成是用于译码，放在 `src/arch/arm/isa/decoder/arm.isa` 这个译码器中的。可以看到其中生成的代码都被放入到 `decode_block` 中，ISA 解析生成器后面应该会把这部分代码拿过来用，生成具体的译码器代码。这个类中定义的核心译码代码生成方法就是 `instCode` 方法，可以看到这个方法是根据传入的参数对先前定义的 `instDecode` 进行占位符的填充，而传入的参数包括具体的指令名称和操作码的相关信息，最后生成的 `build/ARM/arch/arm/generated/decode-method.cc.inc` 中就明显包含了这些代码。
 
 至此，整个解析过程就完成了。
+
+## 访存类指令的 ISA DSL 实现
+
+在查看 AtomicSimpleCPU 的时候，发现 AtomicSimpleCPU 的执行并不需要对指令类型进行判断，不管什么指令直接 `execute`，这令人非常的疑惑。于是对各种访存类指令的 `execute` 实现进行查看之后发现访存指令实现的不只是 `initiateAcc` 和 `completeAcc` 这两种方法，其 `execute` 也有实现，并且 `execute` 是特别针对 Atomic 模式实现的，为的就是在 AtomicSimpleCPU 中不需要进行指令类型的判断。
