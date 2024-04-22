@@ -225,6 +225,7 @@ export default defineConfig({
                 items: [
                   { text: 'pc_event', link: '/notes/sim/gem5src/cpu/pc_event' },
                   { text: 'reg_class.hh', link: '/notes/sim/gem5src/cpu/reg_class_hh' },
+                  { text: 'timebuf.hh', link: '/notes/sim/gem5src/cpu/timebuf_hh' },
                 ]
               },
 
