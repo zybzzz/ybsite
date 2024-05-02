@@ -182,7 +182,8 @@ export default defineConfig({
               { text: 'gem5 cpu model', link: '/notes/sim/gem5/cpu_model' },
               { text: '_m5 in gem5', link: '/notes/sim/gem5/_m5_gem5' },
               { text: 'ThreadContext vs ExecContext', link: '/notes/sim/gem5/tcvsec' },
-              { text: 'Probe system in gem5 (Simpoint example)', link: '/notes/sim/gem5/probesys'}
+              { text: 'Probe system in gem5 (Simpoint example)', link: '/notes/sim/gem5/probesys'},
+              { text: 'Weak simpoint support in gem5', link: '/notes/sim/gem5/simpoint_gem5'}
             ]
           },
 

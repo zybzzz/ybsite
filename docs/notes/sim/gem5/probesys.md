@@ -136,8 +136,8 @@ SimPoint::regProbeListeners()
 }
 ```
 
-两者很巧妙的建立了联系。
+两者很巧妙的建立了联系。更多有关 gem5 中的 SimPoint 支持可以查看[这篇文章](./simpoint_gem5.md)。
 
---- 
+---
 
 以上就是监测系统建立的过程。
