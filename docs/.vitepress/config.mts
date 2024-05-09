@@ -62,6 +62,20 @@ export default defineConfig({
         collapsed: false,
         items: [
           { //level2
+            text: 'books',
+            collapsed: true,
+            items: [
+              { //level3
+                text: 'Modern processor design',
+                collapsed: true,
+                link: 'notes/arch/books/modern-processor-design/index.md',
+                items: [
+                  { text: 'Review of SuperScalar Organization', link: 'notes/arch/books/modern-processor-design/review_superscalar' },
+                ]
+              }
+            ]
+          },
+          { //level2
             text: 'arm',
             collapsed: true,
             items: [
@@ -182,8 +196,8 @@ export default defineConfig({
               { text: 'gem5 cpu model', link: '/notes/sim/gem5/cpu_model' },
               { text: '_m5 in gem5', link: '/notes/sim/gem5/_m5_gem5' },
               { text: 'ThreadContext vs ExecContext', link: '/notes/sim/gem5/tcvsec' },
-              { text: 'Probe system in gem5 (Simpoint example)', link: '/notes/sim/gem5/probesys'},
-              { text: 'Weak simpoint support in gem5', link: '/notes/sim/gem5/simpoint_gem5'}
+              { text: 'Probe system in gem5 (Simpoint example)', link: '/notes/sim/gem5/probesys' },
+              { text: 'Weak simpoint support in gem5', link: '/notes/sim/gem5/simpoint_gem5' }
             ]
           },
 
