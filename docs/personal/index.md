@@ -20,4 +20,4 @@ Keep going!
 
 ## Contact me
 
-Please feel free to contact me at [yb_zhang@mail.ustc.edu.cn](mailto:yb_zhang@mail.ustc.edu.cn).
+Please feel free to contact me at [yb_zhang \[ at \]mail.ustc.edu.cn](mailto:yb_zhang@mail.ustc.edu.cn).
