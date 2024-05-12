@@ -71,6 +71,7 @@ export default defineConfig({
                 link: 'notes/arch/books/modern-processor-design/index.md',
                 items: [
                   { text: 'Review of SuperScalar Organization', link: 'notes/arch/books/modern-processor-design/review_superscalar' },
+                  { text: 'Review of SuperScalar Technology', link: 'notes/arch/books/modern-processor-design/review_superscalar_tech' },
                 ]
               }
             ]
