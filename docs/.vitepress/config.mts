@@ -115,6 +115,7 @@ export default defineConfig({
               { text: 'Static and Runtime Name Resolution', link: '/notes/langlearn/python/Static_and_Runtime_Name_Resolution' },
               { text: 'python import statement', link: '/notes/langlearn/python/python_import_statement' },
               { text: 'fluent_python reading note', link: '/notes/langlearn/python/fluent_python' },
+              { text: 'regular expression in python', link: '/notes/langlearn/python/regular_expression' },
             ]
           },
           { //level2
