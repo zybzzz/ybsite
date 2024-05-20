@@ -73,6 +73,15 @@ export default defineConfig({
                   { text: 'Review of SuperScalar Organization', link: 'notes/arch/books/modern-processor-design/review_superscalar' },
                   { text: 'Review of SuperScalar Technology', link: 'notes/arch/books/modern-processor-design/review_superscalar_tech' },
                 ]
+              },
+              { //level3
+                text: 'Computer Architecture:A Quantitative Approach',
+                collapsed: true,
+                link: 'notes/arch/books/caaqa/index.md',
+                items: [
+                  { text: 'Data-Level Parallelism', link: 'notes/arch/books/caaqa/data_level_parallelism' },
+                  { text: 'other: Pipeline time diagrams and bottleneck analysis', link: 'notes/arch/books/caaqa/other_pipeline_diagram' },
+                ]
               }
             ]
           },
