@@ -80,6 +80,7 @@ export default defineConfig({
                 link: 'notes/arch/books/caaqa/index.md',
                 items: [
                   { text: 'Data-Level Parallelism', link: 'notes/arch/books/caaqa/data_level_parallelism' },
+                  { text: 'Thread-Level Parallelism', link: 'notes/arch/books/caaqa/thread_level_parallelism' },
                   { text: 'other: Pipeline time diagrams and bottleneck analysis', link: 'notes/arch/books/caaqa/other_pipeline_diagram' },
                 ]
               }
