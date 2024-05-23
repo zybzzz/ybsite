@@ -72,6 +72,7 @@ export default defineConfig({
                 items: [
                   { text: 'Review of SuperScalar Organization', link: 'notes/arch/books/modern-processor-design/review_superscalar' },
                   { text: 'Review of SuperScalar Technology', link: 'notes/arch/books/modern-processor-design/review_superscalar_tech' },
+                  { text: 'Other: CDC 6600 Scoreboard', link: 'notes/arch/books/modern-processor-design/other_scoreboard' },
                 ]
               },
               { //level3
