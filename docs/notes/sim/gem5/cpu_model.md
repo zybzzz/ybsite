@@ -42,3 +42,5 @@ AtomicSimpleCPU 一般是用来进行验证功能或者加速全系统仿真用�
 ![AtomicSimpleCPU执行流程](https://www.gem5.org/assets/img/AtomicSimpleCPU.jpg)
 
 对这个模型没什么好说的。
+
+## MinorCPU
