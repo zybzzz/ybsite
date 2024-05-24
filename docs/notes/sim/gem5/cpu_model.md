@@ -44,3 +44,5 @@ AtomicSimpleCPU 一般是用来进行验证功能或者加速全系统仿真用�
 对这个模型没什么好说的。
 
 ## MinorCPU
+
+[单独列出MinorCPU解析](./minorcpu_model.md)
