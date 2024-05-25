@@ -252,6 +252,14 @@ export default defineConfig({
                 text: 'cpu',
                 collapsed: true,
                 items: [
+                  {
+                    text: 'minor',
+                    collapsed: true,
+                    items: [
+                      { text: 'buffer.hh', link: '/notes/sim/gem5src/cpu/minor/buffer_hh.md' },
+                      { text: 'dyn_inst.hh', link: '/notes/sim/gem5src/cpu/minor/dyn_inst_hh.md' },
+                    ]
+                  },
                   { text: 'pc_event', link: '/notes/sim/gem5src/cpu/pc_event' },
                   { text: 'reg_class.hh', link: '/notes/sim/gem5src/cpu/reg_class_hh' },
                   { text: 'timebuf.hh', link: '/notes/sim/gem5src/cpu/timebuf_hh' },
