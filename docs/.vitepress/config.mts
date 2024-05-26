@@ -256,8 +256,9 @@ export default defineConfig({
                     text: 'minor',
                     collapsed: true,
                     items: [
-                      { text: 'buffer.hh', link: '/notes/sim/gem5src/cpu/minor/buffer_hh.md' },
-                      { text: 'dyn_inst.hh', link: '/notes/sim/gem5src/cpu/minor/dyn_inst_hh.md' },
+                      { text: 'buffer.hh', link: '/notes/sim/gem5src/cpu/minor/buffer_hh' },
+                      { text: 'dyn_inst.hh', link: '/notes/sim/gem5src/cpu/minor/dyn_inst_hh' },
+                      { text: 'pipeline.hh', link: '/notes/sim/gem5src/cpu/minor/pipeline' },
                     ]
                   },
                   { text: 'pc_event', link: '/notes/sim/gem5src/cpu/pc_event' },
