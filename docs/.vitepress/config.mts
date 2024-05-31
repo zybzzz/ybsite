@@ -46,6 +46,7 @@ export default defineConfig({
       {
         text: 'Paper Reading',
         collapsed: false,
+        link: '/notes/paper-reading/index.md',
         items: [
           { //level2
             text: 'sim',
@@ -53,7 +54,14 @@ export default defineConfig({
             items: [
               { text: 'ISPASS\'14 Simulating DRAM controllers for future arch', link: '/notes/paper-reading/sim/Simulating-DRAM-controllers-for-future-system-architecture-exploration' },
             ]
-          }
+          },
+          { //level2
+            text: 'papers',
+            collapsed: true,
+            items: [
+              { text: 'Roofline model', link: '/notes/paper-reading/papers/roofline.md' },
+            ]
+          },
         ]
       },
 
