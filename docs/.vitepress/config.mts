@@ -112,6 +112,20 @@ export default defineConfig({
       },
 
       {
+        text: 'OS Development and Usage',
+        collapsed: false,
+        items: [
+          { //level2
+            text: 'linux usage',
+            collapsed: true,
+            items: [
+                { text: 'resolving linking issues', link: '/notes/os-dev-use/linux-use/resolve-link-issue' },
+            ]
+          }
+        ]
+      },
+
+      {
         text: 'Computer Architecture Class',
         collapsed: false,
         items: [

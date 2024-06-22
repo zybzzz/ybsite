@@ -2,7 +2,7 @@
 
 ![](/me.jpg)
 
-Hi 🤗 , I am Yibo Zhang. I am currently a first year master student in the School of Computer Science and Technology at the University of Science and Technology of China. Before that, I got my bachelor's degree from Zhejiang Gongshang University. I would like to record some of my learning process here.
+Hi 🤗 , I am Yibo Zhang. I am currently a first year master student in the School of Computer Science and Technology at the University of Science and Technology of China. Before that, I got my bachelor's degree from ZheJiang GongShang University. I would like to record some of my learning process here.
 
 Keep going!
 
@@ -13,10 +13,10 @@ Keep going!
 
 ## Currently studying & Research interest
 
-- Computer architecture
-- Simulators for architecture exploration (e.g. gem5)
-- Compilation techniques for specialized architectures
-- Compile optimization for parallel architecture
+- Computer Architecture
+- Simulators for Architecture Exploration (e.g. gem5)
+- CPU Performance Analysis
+- Hardware and Software Co-Design
 
 ## Contact me
 
