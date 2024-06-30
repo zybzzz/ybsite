@@ -2,6 +2,12 @@
 
 这篇文章基于 GNU CPP 手册，对应的 gcc 版本为 15.0,主要是想重温一下 CPP 的功能，于是进行了手册的阅读。下面的文章只对我自己注意到的几个关键点进行提及，并不涵盖全部的手册内容。
 
+可以参考的文章：
+
+1. [C/C++ 宏编程的艺术](https://bot-man-jl.github.io/articles/?post=2020/Macro-Programming-Art)
+2. [C/C++ 宏详解](https://www.ljjyy.com/archives/2023/05/100648)
+3. [宏定义的黑魔法 - 宏菜鸟起飞手册](https://onevcat.com/2014/01/black-magic-in-macro/)
+
 ## 预处理器功能
 
 简单的来讲 CPP 就是先于编译器之前对源文件进行相关的处理，进行处理之后方便后续的编译器进行编译。对于 CPP 而言，其主要的操作包括：
