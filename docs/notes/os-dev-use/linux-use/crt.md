@@ -25,5 +25,5 @@ ENTRY(_start)
 SEARCH_DIR("=/usr/local/lib/x86_64-linux-gnu"); SEARCH_DIR("=/lib/x86_64-linux-gnu"); SEARCH_DIR("=/usr/lib/x86_64-linux-gnu"); SEARCH_DIR("=/usr/lib/x86_64-linux-gnu64"); SEARCH_DIR("=/usr/local/lib64"); SEARCH_DIR("=/lib64"); SEARCH_DIR("=/usr/lib64"); SEARCH_DIR("=/usr/local/lib"); SEARCH_DIR("=/lib"); SEARCH_DIR("=/usr/lib"); SEARCH_DIR("=/usr/x86_64-linux-gnu/lib64"); SEARCH_DIR("=/usr/x86_64-linux-gnu/lib");
 ```
 
-在链接的时候，链接器会在库中查找 `_start` 节并链接到可执行文件中来，这个节在libgcc中有实现，于是被链接了过来，在这个`_start` 的实现中，回调用 glibc 中的函数，glibc 中的函数又会调用 main 函数，这就实现了 c 语言进入到 main 中执行。
+在链接的时候，链接器会在库中查找 `_start` 节并链接到可执行文件中来，这个节在glibc中有实现，于是被链接了过来，在这个`_start` 的实现中，会调用 glibc 中的函数，glibc 中的函数又会调用 main 函数，这就实现了 c 语言进入到 main 中执行。
 
