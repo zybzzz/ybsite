@@ -291,6 +291,7 @@ export default defineConfig({
                     collapsed: true,
                     items: [
                       { text: 'rob.hh & rob.cc', link: '/notes/sim/gem5src/cpu/o3/rob' },
+                      { text: 'commit.hh & commit.cc', link: '/notes/sim/gem5src/cpu/o3/commit' }
                     ]
                   },
                   { text: 'pc_event', link: '/notes/sim/gem5src/cpu/pc_event' },

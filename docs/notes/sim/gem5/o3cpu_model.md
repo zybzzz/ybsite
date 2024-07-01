@@ -152,6 +152,8 @@ IEW::tick()
 
 ## Commit 阶段
 
+commit 的实现在[这篇文章](../gem5src/cpu/o3/commit.md)中找到。
+
 ### ROB 实现
 
 重排序缓冲的实现可以在[这篇文章](../gem5src/cpu/o3/rob.md)中找到。
