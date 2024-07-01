@@ -286,6 +286,13 @@ export default defineConfig({
                       { text: 'pipeline.hh', link: '/notes/sim/gem5src/cpu/minor/pipeline' },
                     ]
                   },
+                  {
+                    text: 'o3',
+                    collapsed: true,
+                    items: [
+                      { text: 'rob.hh & rob.cc', link: '/notes/sim/gem5src/cpu/o3/rob' },
+                    ]
+                  },
                   { text: 'pc_event', link: '/notes/sim/gem5src/cpu/pc_event' },
                   { text: 'reg_class.hh', link: '/notes/sim/gem5src/cpu/reg_class_hh' },
                   { text: 'timebuf.hh', link: '/notes/sim/gem5src/cpu/timebuf_hh' },
