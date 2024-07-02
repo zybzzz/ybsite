@@ -22,7 +22,7 @@ struct CommitComm
     // 严格有序访问的指令
     DynInstPtr strictlyOrderedLoad; // *I
 
-    // 向前告知当前已经提交到的非预测性的指令
+    // 向前告知哪些非预测性的指令能进行执行了
     InstSeqNum nonSpecSeqNum; // *I
 
     // 当前已经 commit 到哪条指令了
@@ -429,7 +429,8 @@ Commit::getInsts()
 
             youngestSeqNum[tid] = inst->seqNum;
         } else {
-            // 这些指令应该不会直接被略过，Rename阶段会有相应的判断逻辑
+            // 这些指令被略过可能也没关系，因为当前线程 ROB 已经被清空了
+            // 说明后续的指令流会进行改变，因此这部分可能直接丢弃了也没事
             assert(commitStatus[tid] != ROBSquashing);
             assert(commitStatus[tid] != TrapPending);
             DPRINTF(Commit, "[tid:%i] [sn:%llu] "
@@ -511,6 +512,7 @@ Commit::commitInsts()
             set(pc[tid], head_inst->pcState());
 
             // 尝试对这个头部指令进行提交
+            // 提交不成功的条件是：1.没有执行 2.执行产生了异常
             bool commit_success = commitHead(head_inst, num_committed);
 
             if (commit_success) {
@@ -534,7 +536,8 @@ Commit::commitInsts()
 
                 if (head_inst->isHtmStop())
                     htmStops[tid]++;
-
+                
+                // 设置对 ROB 进行了更改
                 changedROBNumEntries[tid] = true;
 
                 // 更新最后完成指令的信息，并向前传递
@@ -559,13 +562,13 @@ Commit::commitInsts()
 
                 cpu->traceFunctions(pc[tid]->instAddr());
 
+                // 记录当前 commit 到了哪个 pc 值
                 head_inst->staticInst->advancePC(*pc[tid]);
 
                 // 更新最后 commit 的指令
                 lastCommitedSeqNum[tid] = head_inst->seqNum;
 
-                // If this is an instruction that doesn't play nicely with
-                // others squash everything and restart fetch
+                // 如果这个指令本身就被设置了 SquashAfter 标志
                 if (head_inst->isSquashAfter())
                     squashAfter(tid, head_inst);
 
@@ -582,7 +585,8 @@ Commit::commitInsts()
                 }
 
                 
-                // CISC 相关，是对于微指令边界的判断
+                // CISC，是对于微指令边界的判断
+                // RISC，每条指令都是边界
                 bool onInstBoundary = !head_inst->isMicroop() ||
                                       head_inst->isLastMicroop() ||
                                       !head_inst->isDelayedCommit();
@@ -607,19 +611,13 @@ Commit::commitInsts()
                     }
                 }
 
-                // Check if an instruction just enabled interrupts and we've
-                // previously had an interrupt pending that was not handled
-                // because interrupts were subsequently disabled before the
-                // pipeline reached a place to handle the interrupt. In that
-                // case squash now to make sure the interrupt is handled.
-                //
-                // If we don't do this, we might end up in a live lock
-                // situation.
+                // 处理之前尚未处理的中断
                 if (!interrupt && avoidQuiesceLiveLock &&
                     onInstBoundary && cpu->checkInterrupts(0))
                     squashAfter(tid, head_inst);
             } else {
                 // 如果提交头部指令失败，直接停止提交
+                // 有一条指令提交失败，直接终止整个提交过程
                 DPRINTF(Commit, "Unable to commit head instruction PC:%s "
                         "[tid:%i] [sn:%llu].\n",
                         head_inst->pcState(), tid ,head_inst->seqNum);
@@ -649,10 +647,8 @@ Commit::commitHead(const DynInstPtr &head_inst, unsigned inst_num)
     // 获取到线程号
     ThreadID tid = head_inst->threadNumber;
 
-    // 如果这条指令还没被执行
+    // 如果这条指令还没被执行，IEW 阶段决定了这个标志是否被设置
     if (!head_inst->isExecuted()) {
-        // Make sure we are only trying to commit un-executed instructions we
-        // think are possible.
         assert(head_inst->isNonSpeculative() || head_inst->isStoreConditional()
                || head_inst->isReadBarrier() || head_inst->isWriteBarrier()
                || head_inst->isAtomic()
@@ -672,16 +668,18 @@ Commit::commitHead(const DynInstPtr &head_inst, unsigned inst_num)
             return false;
         }
 
+        // inst_num == 0 && !iewStage->hasStoresToWB(tid) 才执行后面的
+
         toIEW->commitInfo[tid].nonSpecSeqNum = head_inst->seqNum;
 
-        // Change the instruction so it won't try to commit again until
-        // it is executed.
+        // 清除这条指令能被 commit 的标志，因为其还没背执行
         head_inst->clearCanCommit();
 
         if (head_inst->isLoad() && head_inst->strictlyOrdered()) {
             DPRINTF(Commit, "[tid:%i] [sn:%llu] "
                     "Strictly ordered load, PC %s.\n",
                     tid, head_inst->seqNum, head_inst->pcState());
+            // 向前传递严格的内存序的信息
             toIEW->commitInfo[tid].strictlyOrdered = true;
             toIEW->commitInfo[tid].strictlyOrderedLoad = head_inst;
         } else {
@@ -691,12 +689,10 @@ Commit::commitHead(const DynInstPtr &head_inst, unsigned inst_num)
         return false;
     }
 
-    // Check if the instruction caused a fault.  If so, trap.
+    // 检查前面指令本身的执行是不是触发了异常
     Fault inst_fault = head_inst->getFault();
 
-    // hardware transactional memory
-    // if a fault occurred within a HTM transaction
-    // ensure that the transaction aborts
+    // 如果是硬件事务内存触发的异常，则将异常设置为硬件事务内存专用的异常
     if (inst_fault != NoFault && head_inst->inHtmTransactionalState()) {
         // There exists a generic HTM fault common to all ISAs
         if (!std::dynamic_pointer_cast<GenericHtmFailureFault>(inst_fault)) {
@@ -711,11 +707,12 @@ Commit::commitHead(const DynInstPtr &head_inst, unsigned inst_num)
         // then there is no need to raise a new fault
     }
 
-    // Stores mark themselves as completed.
+    // 非 store 的指令如果没有产生异常被认为完成
     if (!head_inst->isStore() && inst_fault == NoFault) {
         head_inst->setCompleted();
     }
 
+    // 如果产生了异常
     if (inst_fault != NoFault) {
         DPRINTF(Commit, "Inst [tid:%i] [sn:%llu] PC %s has a fault\n",
                 tid, head_inst->seqNum, head_inst->pcState());
@@ -728,6 +725,7 @@ Commit::commitHead(const DynInstPtr &head_inst, unsigned inst_num)
             return false;
         }
 
+        // inst_num == 0 && !iewStage->hasStoresToWB(tid) 才执行后面的
         head_inst->setCompleted();
 
         // If instruction has faulted, let the checker execute it and
@@ -739,25 +737,18 @@ Commit::commitHead(const DynInstPtr &head_inst, unsigned inst_num)
 
         assert(!thread[tid]->noSquashFromTC);
 
-        // Mark that we're in state update mode so that the trap's
-        // execution doesn't generate extra squashes.
-        // todo: Don't want squash while processing fault?
+        // 进行异常处理的时候设置，暂时不明白意图
         thread[tid]->noSquashFromTC = true;
 
-        // Execute the trap.  Although it's slightly unrealistic in
-        // terms of timing (as it doesn't wait for the full timing of
-        // the trap event to complete before updating state), it's
-        // needed to update the state as soon as possible.  This
-        // prevents external agents from changing any specific state
-        // that the trap need.
-        // this execute trap.
+        // 处理异常
         cpu->trap(inst_fault, tid,
                   head_inst->notAnInst() ? nullStaticInstPtr :
                       head_inst->staticInst);
 
-        // Exit state update mode to avoid accidental updating.
+        // 处理完异常再改回来
         thread[tid]->noSquashFromTC = false;
 
+        // 状态设置为正在处理异常
         commitStatus[tid] = TrapPending;
 
         DPRINTF(Commit,
@@ -778,12 +769,12 @@ Commit::commitHead(const DynInstPtr &head_inst, unsigned inst_num)
             head_inst->traceData = NULL;
         }
 
-        // Generate trap squash event.
-        // Modeling the timing of traps here.
+        // 建模异常的事件，事件触发的时候应该会把 commitStatus 改回来
         generateTrapEvent(tid, inst_fault);
         return false;
     }
 
+    // 没有发生异常的话更新统计数据
     updateComInstStats(head_inst);
 
     DPRINTF(Commit,
@@ -802,26 +793,33 @@ Commit::commitHead(const DynInstPtr &head_inst, unsigned inst_num)
                 tid, head_inst->seqNum, head_inst->pcState());
     }
 
-    // Update the commit rename map
+    // 更新 rename 表
     for (int i = 0; i < head_inst->numDestRegs(); i++) {
         renameMap[tid]->setEntry(head_inst->flattenedDestIdx(i),
                                  head_inst->renamedDestIdx(i));
     }
 
-    // hardware transactional memory
-    // the HTM UID is purely for correctness and debugging purposes
+    // 硬件事务内存相关
     if (head_inst->isHtmStart())
         iewStage->setLastRetiredHtmUid(tid, head_inst->getHtmTransactionUid());
 
-    // Finally clear the head ROB entry.
+    // 正式提交指令
     rob->retireHead(tid);
 
 
-    // If this was a store, record it for this cycle.
+    // store 类型指令由 store queue 去做提交
     if (head_inst->isStore() || head_inst->isAtomic())
         committedStores[tid] = true;
 
-    // Return true to indicate that we have committed an instruction.
+    // 返回提交成功
     return true;
 }
 ```
+
+## commit阶段总体功能框图
+
+![what commit do](./images/what-commit-do.png)
+
+## 精确异常的产生和处理
+
+精确异常的产生在尝试从头部提交指令(`Commit::commitHead`)的时候，提交的时候发现了指令执行产生了异常，于是进行异常的处理，将自身状态设置为 TrapPending，进行异常的处理，然后建模异常事件，在异常事件触发的时候设置 `trapSquash[tid]`。在下一次进入到 commit 阶段(`Commit::commit`)的时候，由于检测到 `trapSquash[tid]`，开始进行指令排空的标记，以此实现精确的异常。
