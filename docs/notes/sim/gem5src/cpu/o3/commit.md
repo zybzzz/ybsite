@@ -823,3 +823,7 @@ Commit::commitHead(const DynInstPtr &head_inst, unsigned inst_num)
 ## 精确异常的产生和处理
 
 精确异常的产生在尝试从头部提交指令(`Commit::commitHead`)的时候，提交的时候发现了指令执行产生了异常，于是进行异常的处理，将自身状态设置为 TrapPending，进行异常的处理，然后建模异常事件，在异常事件触发的时候设置 `trapSquash[tid]`。在下一次进入到 commit 阶段(`Commit::commit`)的时候，由于检测到 `trapSquash[tid]`，开始进行指令排空的标记，以此实现精确的异常。
+
+## 有关向流水线前面阶段的信息传递
+
+在 commit 阶段会向前面阶段传递大量信息，[这篇文章](./commit-backwardpass.md)讲传递信息的发生时机。
