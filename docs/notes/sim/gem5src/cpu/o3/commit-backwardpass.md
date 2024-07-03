@@ -37,7 +37,7 @@
 ## freeROBEntries
 
 1. Commit::startupStage中设置，值为`rob->numFreeEntries(tid)`。
-2. Commit::commit中设置，值为`rob->numFreeEntries(tid)`。
+2. Commit::commit中设置，如果本周期对ROB产生了修改，则会重新计算这个值，值为`rob->numFreeEntries(tid)`。
 
 ## squash
 
