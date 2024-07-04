@@ -60,3 +60,68 @@ Rename::rename 中的状态转换：
       - blockThisCycle 如果被设置，进行 block(tid)。
 
 以上为所有的状态转换。
+
+## 考虑 commit 阶段 squash 发生，先前正在正常执行
+
+状态设置为 Squashing。随后
+
+```cpp
+for (int i=0; i<fromDecode->size; i++) {
+    if (fromDecode->insts[i]->threadNumber == tid &&
+        fromDecode->insts[i]->seqNum > squash_seq_num) {
+        fromDecode->insts[i]->setSquashed();
+        wroteToTimeBuffer = true;
+    }
+}
+```
+
+对前阶段传过来的指令进行判断，对属于当前线程的指令序列号判断进行设置，然后清空inst和skidbuffer，恢复重命名历史。进入Rename::rename，由于当前状态是squash，什么都不能做。进入下一轮 tick，假如没有任何情况，转换成 Running，对正常接收到的指令进行重命名。
+
+## 正常 running 执行碰到序列化
+
+假设在 renameInst 中遇到情况 `inst->isSerializeBefore() && !inst->isSerializeHandled()`，且这条指令本身是后来被设置的 SerializeBefore。状态转换成 SerializeStall，`serializeInst[tid] = inst`，剩余指令转到 skidbuffer，先前重命名的指令已经被传到下一个阶段。进入第二个 tick，checkSignalsAndUpdate 中取出上个周期保存的数据 `DynInstPtr serial_inst = serializeInst[tid];`，状态转换成 Unblocking，将SerializeBefore标记清除掉，将这条指令插入 skidbuffer 如果其非空，否则插入 insts。`serializeInst[tid]` 设置为 null。随后所有条件都被排除，正常重命名。重命名完成之后，在Rename::rename中，会进行 `status_change = unblock(tid) || status_change || blockThisCycle;`，这之中会调用 `unblock(tid)`，会尝试将状态转换成 running，如果转换不了仍然保持 unblock 状态。
+
+**对于unblock状态，每次renameInsts执行完成之后，都会尝试将状态转换成running。对于renameInsts，其执行过程中会有多个判断，对于出现资源不够或者一个周期处理不完的情况，都尝试通过block将状态转换成block。**
+
+## 正常running 执行遇到 serializeAfter
+
+遇到 serializeAfter 的情况是在 renameInsts中，在 `(inst->isStoreConditional() || inst->isSerializeAfter()) && !inst->isSerializeHandled()` 情况下，将本条指令设置为序列化已处理 `inst->setSerializeHandled()`，本条指令在本周期并不会导致block，这条 serializeAfter 会被传送到下个阶段，随后有 `serializeAfter(insts_to_rename, tid)`，即尝试把这条指令的下一条指令变成 SerializeBefore，等于说是用下一条指令的 SerializeBefore 实现本条指令的 SerializeAfter，实现语义上的相等。`serializeAfter(insts_to_rename, tid)` 函数如下：
+
+```cpp
+void
+Rename::serializeAfter(InstQueue &inst_list, ThreadID tid)
+{
+    // 如果指令序列为空，就设置一个标记
+    // 等下次指令序列不空的时候，将第一条标记设置为 SerializeBefore
+    if (inst_list.empty()) {
+        serializeOnNextInst[tid] = true;
+        return;
+    }
+
+    // 如果指令序列本身就不为空，直接设置就行了
+    inst_list.front()->setSerializeBefore();
+}
+```
+
+这个函数实际上就是实现了将下一条指令设置成 SerializeBefore。
+
+## 受 resumeSerialize 影响的情况
+
+只有状态在 SerializeStall 时，遇到 commit 阶段传送过来的 squash 的时候才会触发，在调用 Rename::squash 的时候，如果有 `serializeInst[tid]->seqNum <= squash_seq_num`(这个情况应该很少出现)，则 resumeSerialize 被设置为 true，状态转成 squashing，清空 insts 和 skidBuffer。进入下一个时钟周期，一切都正常的情况下状态转 SerializeStall， 进入 Rename::rename，resumeSerialize 被设置，将这个值设置为 false，将指令转入skidbuffer。再到下个时钟周期，状态转 Unblocking 随后进行寄存器重命名。
+
+**``serializeInst[tid]->seqNum <= squash_seq_num``我认为几乎不可能发生，对于serializeInst的指令，执行到就被堵住了，他自身和后续的指令都不会向下个阶段传递了，因此后续阶段产生的squash_seq_num必然小于这个线程的序列号。**
+
+## 与前阶段的通信
+
+这个阶段主要有两个与前阶段的通信变量，分别是 renameBlock(true本阶段阻塞) 与 renameUnBlock(true本阶段不阻塞)，默认都为 false。
+
+对于 renameBlock：
+
+1. block时候，符合一定的条件设置。
+
+对于 renameUnBlock：
+
+1. 在上面的1 renameBlock 被设置的时候哦，renameUnBlock 变成 false。
+2. unblock中状态成功转换成 running 的时候设置为 true。
+3. squash如果状态为 Blocked、Unblocking、SerializeStall 的时候设置。
+4. Rename::rename中，调用了 block 的情况下，紧跟着将 renameUnBlock 设置成 false。

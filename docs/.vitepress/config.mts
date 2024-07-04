@@ -290,6 +290,7 @@ export default defineConfig({
                     text: 'o3',
                     collapsed: true,
                     items: [
+                      { text: 'rename.hh & rename.cc', link: '/notes/sim/gem5src/cpu/o3/rename' },
                       { text: 'rob.hh & rob.cc', link: '/notes/sim/gem5src/cpu/o3/rob' },
                       { text: 'commit.hh & commit.cc', link: '/notes/sim/gem5src/cpu/o3/commit' }
                     ]
