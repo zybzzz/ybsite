@@ -152,6 +152,10 @@ IEW::tick()
 
 功能池和功能单元的实现可以参考[这篇文章](./fu.md)
 
+## 指令队列 InstructionQueue 实现
+
+![InstructionQueue](./inst_queue.md)
+
 ## IEW 状态和状态转换
 
 ```cpp

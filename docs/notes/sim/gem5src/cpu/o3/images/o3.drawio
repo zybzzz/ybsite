@@ -1,4 +1,4 @@
-<mxfile host="Electron" modified="2024-07-03T21:20:42.636Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.5.3 Chrome/124.0.6367.207 Electron/30.0.6 Safari/537.36" etag="bkSjSIh3BpYXrQsyxsAn" version="24.5.3" type="device" pages="2">
+<mxfile host="Electron" modified="2024-07-06T11:38:34.130Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.5.3 Chrome/124.0.6367.207 Electron/30.0.6 Safari/537.36" etag="aqXANDdxwWQCPPMYTD1B" version="24.5.3" type="device" pages="3">
   <diagram name="commit" id="EcCXSCglRMA22i6vWWo2">
     <mxGraphModel dx="1114" dy="875" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="4000" pageHeight="3000" math="0" shadow="0">
       <root>
@@ -218,6 +218,122 @@
         </mxCell>
         <mxCell id="m45rEkupqLxOlS8a_EyP-7" value="serializestall" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fontFamily=Source Han Sans SC;strokeWidth=2;" parent="1" vertex="1">
           <mxGeometry x="620" y="490" width="80" height="80" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="RV2fBbuusFQNAWvAslHr" name="dep_graph">
+    <mxGraphModel dx="1114" dy="875" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="4000" pageHeight="3000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="HcYvP3SF-8wxTsLWq5HH-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeWidth=2;fontFamily=Source Han Sans SC;fontSize=12;" edge="1" parent="1" source="HcYvP3SF-8wxTsLWq5HH-1" target="HcYvP3SF-8wxTsLWq5HH-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="HcYvP3SF-8wxTsLWq5HH-1" value="依赖产生者(指令)" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=2;fontFamily=Source Han Sans SC;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="310" y="240" width="100" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="HcYvP3SF-8wxTsLWq5HH-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeWidth=2;fontFamily=Source Han Sans SC;fontSize=12;" edge="1" parent="1" source="HcYvP3SF-8wxTsLWq5HH-3" target="HcYvP3SF-8wxTsLWq5HH-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="HcYvP3SF-8wxTsLWq5HH-3" value="依赖消费者(指令)" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=2;fontFamily=Source Han Sans SC;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="440" y="240" width="100" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="HcYvP3SF-8wxTsLWq5HH-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeWidth=2;fontFamily=Source Han Sans SC;fontSize=12;" edge="1" parent="1" source="HcYvP3SF-8wxTsLWq5HH-4" target="HcYvP3SF-8wxTsLWq5HH-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="HcYvP3SF-8wxTsLWq5HH-4" value="依赖消费者(指令)" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=2;fontFamily=Source Han Sans SC;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="570" y="240" width="100" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="HcYvP3SF-8wxTsLWq5HH-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeWidth=2;fontFamily=Source Han Sans SC;fontSize=12;" edge="1" parent="1" source="HcYvP3SF-8wxTsLWq5HH-5" target="HcYvP3SF-8wxTsLWq5HH-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="HcYvP3SF-8wxTsLWq5HH-5" value="依赖消费者(指令)" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=2;fontFamily=Source Han Sans SC;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="700" y="240" width="100" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="HcYvP3SF-8wxTsLWq5HH-6" value="依赖消费者(指令)" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=2;fontFamily=Source Han Sans SC;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="830" y="240" width="100" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="HcYvP3SF-8wxTsLWq5HH-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeWidth=2;fontFamily=Source Han Sans SC;fontSize=12;" edge="1" parent="1" source="HcYvP3SF-8wxTsLWq5HH-17" target="HcYvP3SF-8wxTsLWq5HH-19">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="HcYvP3SF-8wxTsLWq5HH-17" value="依赖产生者(指令)" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=2;fontFamily=Source Han Sans SC;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="310" y="290" width="100" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="HcYvP3SF-8wxTsLWq5HH-18" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeWidth=2;fontFamily=Source Han Sans SC;fontSize=12;" edge="1" parent="1" source="HcYvP3SF-8wxTsLWq5HH-19" target="HcYvP3SF-8wxTsLWq5HH-21">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="HcYvP3SF-8wxTsLWq5HH-19" value="依赖消费者(指令)" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=2;fontFamily=Source Han Sans SC;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="440" y="290" width="100" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="HcYvP3SF-8wxTsLWq5HH-21" value="依赖消费者(指令)" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=2;fontFamily=Source Han Sans SC;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="570" y="290" width="100" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="HcYvP3SF-8wxTsLWq5HH-25" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeWidth=2;fontFamily=Source Han Sans SC;fontSize=12;" edge="1" parent="1" source="HcYvP3SF-8wxTsLWq5HH-26" target="HcYvP3SF-8wxTsLWq5HH-28">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="HcYvP3SF-8wxTsLWq5HH-26" value="依赖产生者(指令)" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=2;fontFamily=Source Han Sans SC;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="310" y="340" width="100" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="HcYvP3SF-8wxTsLWq5HH-27" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeWidth=2;fontFamily=Source Han Sans SC;fontSize=12;" edge="1" parent="1" source="HcYvP3SF-8wxTsLWq5HH-28" target="HcYvP3SF-8wxTsLWq5HH-30">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="HcYvP3SF-8wxTsLWq5HH-28" value="依赖消费者(指令)" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=2;fontFamily=Source Han Sans SC;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="440" y="340" width="100" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="HcYvP3SF-8wxTsLWq5HH-29" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeWidth=2;fontFamily=Source Han Sans SC;fontSize=12;" edge="1" parent="1" source="HcYvP3SF-8wxTsLWq5HH-30" target="HcYvP3SF-8wxTsLWq5HH-32">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="HcYvP3SF-8wxTsLWq5HH-30" value="依赖消费者(指令)" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=2;fontFamily=Source Han Sans SC;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="570" y="340" width="100" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="HcYvP3SF-8wxTsLWq5HH-31" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeWidth=2;fontFamily=Source Han Sans SC;fontSize=12;" edge="1" parent="1" source="HcYvP3SF-8wxTsLWq5HH-32" target="HcYvP3SF-8wxTsLWq5HH-33">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="HcYvP3SF-8wxTsLWq5HH-32" value="依赖消费者(指令)" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=2;fontFamily=Source Han Sans SC;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="700" y="340" width="100" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="HcYvP3SF-8wxTsLWq5HH-33" value="依赖消费者(指令)" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=2;fontFamily=Source Han Sans SC;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="830" y="340" width="100" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="HcYvP3SF-8wxTsLWq5HH-34" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeWidth=2;fontFamily=Source Han Sans SC;fontSize=12;" edge="1" parent="1" source="HcYvP3SF-8wxTsLWq5HH-35" target="HcYvP3SF-8wxTsLWq5HH-37">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="HcYvP3SF-8wxTsLWq5HH-35" value="依赖产生者(指令)" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=2;fontFamily=Source Han Sans SC;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="310" y="390" width="100" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="HcYvP3SF-8wxTsLWq5HH-36" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeWidth=2;fontFamily=Source Han Sans SC;fontSize=12;" edge="1" parent="1" source="HcYvP3SF-8wxTsLWq5HH-37" target="HcYvP3SF-8wxTsLWq5HH-39">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="HcYvP3SF-8wxTsLWq5HH-37" value="依赖消费者(指令)" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=2;fontFamily=Source Han Sans SC;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="440" y="390" width="100" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="HcYvP3SF-8wxTsLWq5HH-38" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeWidth=2;fontFamily=Source Han Sans SC;fontSize=12;" edge="1" parent="1" source="HcYvP3SF-8wxTsLWq5HH-39" target="HcYvP3SF-8wxTsLWq5HH-41">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="HcYvP3SF-8wxTsLWq5HH-39" value="依赖消费者(指令)" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=2;fontFamily=Source Han Sans SC;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="570" y="390" width="100" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="HcYvP3SF-8wxTsLWq5HH-41" value="依赖消费者(指令)" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=2;fontFamily=Source Han Sans SC;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="700" y="390" width="100" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="HcYvP3SF-8wxTsLWq5HH-43" value="Dependency Grapth" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;strokeWidth=2;fontFamily=Source Han Sans SC;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="220" y="200" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="HcYvP3SF-8wxTsLWq5HH-44" value="..." style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;strokeWidth=2;fontFamily=Source Han Sans SC;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="940" y="250" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="HcYvP3SF-8wxTsLWq5HH-45" value="..." style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;strokeWidth=2;fontFamily=Source Han Sans SC;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="690" y="300" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="HcYvP3SF-8wxTsLWq5HH-46" value="..." style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;strokeWidth=2;fontFamily=Source Han Sans SC;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="940" y="350" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="HcYvP3SF-8wxTsLWq5HH-47" value="..." style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;strokeWidth=2;fontFamily=Source Han Sans SC;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="830" y="400" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="HcYvP3SF-8wxTsLWq5HH-48" value="数组大小为numRntriesd" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;strokeWidth=2;fontFamily=Source Han Sans SC;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="260" y="460" width="150" height="30" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
