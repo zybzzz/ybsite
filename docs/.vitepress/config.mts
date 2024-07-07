@@ -297,6 +297,7 @@ export default defineConfig({
                       { text: 'fu_pool & fu', link: '/notes/sim/gem5src/cpu/o3/fu' },
                       { text: 'InstructionQueue', link: '/notes/sim/gem5src/cpu/o3/inst_queue' },
                       { text: 'DependencyGraph', link: '/notes/sim/gem5src/cpu/o3/dep_graph' },
+                      { text: 'load store queue', link: '/notes/sim/gem5src/cpu/o3/lsq' },
                     ]
                   },
                   { text: 'pc_event', link: '/notes/sim/gem5src/cpu/pc_event' },
