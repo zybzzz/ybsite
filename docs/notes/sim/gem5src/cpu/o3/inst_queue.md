@@ -676,6 +676,33 @@ InstructionQueue::doSquash(ThreadID tid)
 
 ```
 
+## 指令进入 readyInsts 队列的时机
+
+通过调用 addIfReady 进入到 readyInsts 中。
+
+1. InstructionQueue::insert：在指令被插入到 IQ 中，在插入的时候对于非内存类的指令会进行 addIfReady 判断，符合的会直接进入到 ready 队列中。
+2. InstructionQueue::scheduleNonSpec：对于非内存的指令会进行 addIfReady 的判断。
+3. InstructionQueue::wakeDependents：当某个生产者满足，开始唤醒依赖的时候会进行 addIfReady 的判断。
+
+## 指令在 instList 中的相关操作
+
+1. InstructionQueue::insert 和 InstructionQueue::insertNonSpec 中进行插入。
+2. InstructionQueue::commit 的时候根据序列号删除相关的节点。
+3. InstructionQueue::doSquash 的时候根据序列号进行相关的清空。
+
+## 指令状态变更
+
+1. InstructionQueue::insert 和 InstructionQueue::insertNonSpec 中标记指令 setInIQ。
+2. InstructionQueue::scheduleReadyInsts 中对于成功发射的指令设置 setIssued。
+3. 在 InstructionQueue::scheduleNonSpec 中设置 setAtCommit 和 setCanIssue，暂时不明确这两个是什么意思。
+4. InstructionQueue::wakeDependents 中对于内存类指令，设置 memOpDone = true。
+5. InstructionQueue::wakeDependents 中对于依赖图中的消费者指令，进行 markSrcRegReady 的调用，注意，这里只改变了 dyninst 中已经准备好的寄存器的计数，并不知道哪个寄存器准备好，在 markSrcRegReady 中，如果所有寄存器都准备好，指令状态被设置成 setCanIssue。
+6. rescheduleMemInst 中 clearCanIssue。
+7. blockMemInst 中 clearIssued 和 clearCanIssue。
+8. InstructionQueue::doSquash 中，对于清空的指令 setSquashedInIQ、setIssued(设置成已经发射)、setCanCommit、clearInIQ(设置逻辑上从 IQ 移除)。这里的清空只是对指令进行了相关的标记，对于还在 instList 中的指令，在 commit 的时候，会将他们移除。
+9. InstructionQueue::addToDependents 会对所需的寄存器依赖进行检测，如果依赖已经满足，调用 `markSrcRegReady(src_reg_idx)`。
+10. InstructionQueue::addIfReady 中 readyToIssue 就是对 CanIssue 标志的判断。
+
 ## 其他 api
 
 1. `getInstToExecute`：从 instsToExecute 中拿出头部并返回。
