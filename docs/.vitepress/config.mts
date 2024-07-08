@@ -298,6 +298,7 @@ export default defineConfig({
                       { text: 'InstructionQueue', link: '/notes/sim/gem5src/cpu/o3/inst_queue' },
                       { text: 'DependencyGraph', link: '/notes/sim/gem5src/cpu/o3/dep_graph' },
                       { text: 'load store queue', link: '/notes/sim/gem5src/cpu/o3/lsq' },
+                      { text: 'load store queue unit', link: '/notes/sim/gem5src/cpu/o3/lsq_unit' },
                     ]
                   },
                   { text: 'pc_event', link: '/notes/sim/gem5src/cpu/pc_event' },
