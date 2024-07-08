@@ -14,6 +14,8 @@ BaseCPU 封装了如下的功能：
 4. 获取端口。BaseCPU 中定义了从指令接收端口和数据接收端口获取端口的方法，子类中必须实现这些方法。也即子类中必须也得提供这几个端口。
 5. Thread 相关。
 
+在 BaseCPU 中还声明了很多 probepoint，对外提供了监测点的实现方式，本以为这个监测点已经注册了回调函数到 manager 中，但是实际通过观察发现，这些监测点并没有注册相应的回调函数到 manager 中，因此对于 BaseCPU 中检测点的 notify 实际上是没有任何作用的。典型的如在 o3 的场景下，`updateCycleCounters` 就是一个没用的函数，看似在计算时间，实际上 notify 都没有其作用。对于各个统计数据的计算还是通过在程序中手动自增或者采集的方式计算的。
+
 ## TimingSimpleCPU
 
 主要解释 TimingSimpleCPU 的指令执行流程和 TimingSimpleCPU 中运行时钟周期的计算方法。

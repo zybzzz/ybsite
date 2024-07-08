@@ -74,6 +74,10 @@ LSQ Unit 实际上真正实现了 load store queue，每个线程都有自己对
 
 拿到违反内存序的指令。
 
+## initacc 和 completeacc
+
+staticinst的这两个方法调用的是 ExecContext 中相关的方法，在 o3 中，普通指令走的调用应该是 dyn_inst 中的 initiateMemRead 和 setRegOperand。
+
 ## inst 状态变化
 
 1. writeback事件的回调中，如果指令没有执行，指令就会 setExecuted。
