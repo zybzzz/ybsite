@@ -31,3 +31,13 @@ ROB::retireHead 中设置。
 ## setSquashed
 
 在多个阶段均有设置，除了预测错误之外不清楚有什么原因需要设置这个。
+
+## 创建时
+
+创建的时候除了获得 staticInst 之外，还会进行以下 3 个标记的设置：
+
+```cpp
+instFlags[RecordResult] = true;
+instFlags[Predicate] = true;
+instFlags[MemAccPredicate] = true;
+```

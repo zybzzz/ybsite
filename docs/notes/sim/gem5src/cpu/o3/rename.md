@@ -109,7 +109,7 @@ Rename::serializeAfter(InstQueue &inst_list, ThreadID tid)
 
 只有状态在 SerializeStall 时，遇到 commit 阶段传送过来的 squash 的时候才会触发，在调用 Rename::squash 的时候，如果有 `serializeInst[tid]->seqNum <= squash_seq_num`(这个情况应该很少出现)，则 resumeSerialize 被设置为 true，状态转成 squashing，清空 insts 和 skidBuffer。进入下一个时钟周期，一切都正常的情况下状态转 SerializeStall， 进入 Rename::rename，resumeSerialize 被设置，将这个值设置为 false，将指令转入skidbuffer。再到下个时钟周期，状态转 Unblocking 随后进行寄存器重命名。
 
-**``serializeInst[tid]->seqNum <= squash_seq_num``我认为几乎不可能发生，对于serializeInst的指令，执行到就被堵住了，他自身和后续的指令都不会向下个阶段传递了，因此后续阶段产生的squash_seq_num必然小于这个线程的序列号。**
+**``serializeInst[tid]->seqNum <= squash_seq_num``我认为几乎不可能发生，对于serializeInst的指令，执行到就被堵住了，他自身和后续的指令都不会向下个阶段传递了，因此后续阶段产生的squash_seq_num必然小于这个线程的序列号**.
 
 ## 与前阶段的通信
 
@@ -125,3 +125,7 @@ Rename::serializeAfter(InstQueue &inst_list, ThreadID tid)
 2. unblock中状态成功转换成 running 的时候设置为 true。
 3. squash如果状态为 Blocked、Unblocking、SerializeStall 的时候设置。
 4. Rename::rename中，调用了 block 的情况下，紧跟着将 renameUnBlock 设置成 false。
+
+## 在 rename dest 的时候将对应寄存器的 scoreboard 设置为0
+
+在 rename dest 的时候，对于一个体系结构寄存器，可能会产生一个新的物理寄存器映射，设体系结构寄存器为$a$，物理寄存器为$r_1$、$r_2$，原先的映射为$a \rightarrow r_1$变成$a \rightarrow r_2$,在完成这个 rename 的时候，$r_1$的 scoreboard 会被设置为 0.这时候是不是担心这个$r_1$在还没用完的时候就又重新被用于其他 rename 了呢？实际不然，对于 rename 寄存器的分配，新分配的屋里寄存器并不是由 scoreboard 的值决定的，而是从一个 freelist 中获取的。而只有在使用$r_1$的指令 commit 掉之后才会将$r_1$释放到freelist中，因此记分牌设置为 0 并不会导致这个寄存器还没用完被分配出去。
