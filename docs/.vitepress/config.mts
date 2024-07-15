@@ -107,7 +107,20 @@ export default defineConfig({
                 ]
               }
             ]
-          }
+          },
+          { //level2
+            text: 'snippets',
+            collapsed: true,
+            items: [
+              { //level3
+                text: 'memory order',
+                collapsed: true,
+                items: [
+                  { text: 'single core memory order', link: '/notes/arch/snippets/mem_order/singlecore_memorder' },
+                ]
+              }
+            ]
+          },
         ]
       },
 
