@@ -787,3 +787,241 @@ IEW::executeInsts()
 
 前面的执行步骤和这边的依赖唤醒共同构成了写回到物理寄存器和前递的过程，指令在执行的时候调用 execute 就会计算其结果，然后更新到物理寄存器上，在写回进行唤醒依赖的时候，一旦依赖满足后续指令就能够继续向下进行。整个过程就是一个写回物理寄存器在前递的过程。
 
+## load 指令的 IEW 过程
+
+简单讲解 load 指令的 IEW 过程，load 指令指派的时候会被指派到 instruction queue中，同时还会被插入到 lsq 和 Memdepdency unit 中进行分析。在发射的时候建模的是地址解析的时间，在执行的时候发起访问，这个访问取决于存储层次的时间。load 指令的写回会被内存访问的回调事件触发，然后进行写回的相关操作。
+
+指令的指派在 `IEW::dispatchInsts` 中：
+
+```cpp
+// ...
+else if (inst->isLoad()) {
+    DPRINTF(IEW, "[tid:%i] Issue: Memory instruction "
+            "encountered, adding to LSQ.\n", tid);
+
+    // Reserve a spot in the load store queue for this
+    // memory access.
+    ldstQueue.insertLoad(inst);
+
+    ++iewStats.dispLoadInsts;
+
+    add_to_iq = true;
+
+    toRename->iewInfo[tid].dispatchedToLQ++;
+}
+// ... 
+```
+
+可以看到 load 指令被插入到 lsq 中，同时由于 `add_to_iq` 被设置，后续还会被插入到 instruction queue 中，插入 instruction queue 之后调用的函数如下：
+
+```cpp
+// Look through its source registers (physical regs), and mark any
+// dependencies.
+addToDependents(new_inst);
+
+// Have this instruction set itself as the producer of its destination
+// register(s).
+addToProducers(new_inst);
+
+if (new_inst->isMemRef()) {
+    memDepUnit[new_inst->threadNumber].insert(new_inst);
+} else {
+    addIfReady(new_inst);
+}
+```
+
+可以看到它和其他的指令一样都会被放到依赖图中，只不过它进入 ready 队列的判断和普通指令不一样，她进入 ready 队列的判断是由 memDepUnit 决定的。
+
+在指令 ready 之后会发射，发射完成的是地址解析时间的建模，发射在 instruction queue 的 `scheduleReadyInsts` 中：
+
+```cpp
+if (!issuing_inst->isMemRef()) {
+    // Memory instructions can not be freed from the IQ until they
+    // complete.
+    ++freeEntries;
+    count[tid]--;
+    issuing_inst->clearInIQ();
+} else {
+    memDepUnit[tid].issue(issuing_inst);
+}
+```
+
+在 `scheduleReadyInsts` 建模延迟的同时，告知 memDepUnit 发射这个 load。
+
+在执行阶段，对于 load 指令：
+
+```cpp
+else if (inst->isLoad()) {
+    // Loads will mark themselves as executed, and their writeback
+    // event adds the instruction to the queue to commit
+    fault = ldstQueue.executeLoad(inst);
+
+    if (inst->isTranslationDelayed() &&
+        fault == NoFault) {
+        // A hw page table walk is currently going on; the
+        // instruction must be deferred.
+        DPRINTF(IEW, "Execute: Delayed translation, deferring "
+                "load.\n");
+        instQueue.deferMemInst(inst);
+        continue;
+    }
+
+    if (inst->isDataPrefetch() || inst->isInstPrefetch()) {
+        inst->fault = NoFault;
+    }
+}
+```
+
+正式的在 executeLoad 中发起 initiateAcc 的请求，这个 initiateAcc 可以参考：
+
+```cpp
+Fault
+LDRH64_REG::initiateAcc(ExecContext *xc, trace::InstRecord *traceData) const
+{
+    Addr EA;
+    Fault fault = NoFault;
+
+    uint64_t XBase = 0;
+    uint64_t XOffset = 0;
+    uint16_t Mem = {};
+    ;
+    XBase = (xc->getRegOperand(this, 0) & mask(aarch64 ? 64 : 32));
+    XOffset = (xc->getRegOperand(this, 1) & mask(aarch64 ? 64 : 32));
+    ;
+
+    if (baseIsSP && bits(XBase, 3, 0) &&
+        SPAlignmentCheckEnabled(xc->tcBase())) {
+        return std::make_shared<SPAlignmentFault>();
+    }
+    EA = XBase + extendReg64(XOffset, type, shiftAmt, 64);
+    unsigned memAccessFlags = 1 | ArmISA::MMU::AllowUnaligned;
+    ;
+
+    if (fault == NoFault) {
+        fault = initiateMemRead(xc, traceData, EA, Mem, memAccessFlags);
+    }
+
+    return fault;
+}
+```
+
+其中调用了 initiateMemRead，而这个函数实际上调用的是 dyninst 的 initiateMemRead，在 dyninst 的这个函数中发起了对内存的访问。
+
+在内存访问的完成之后会调用 `LSQUnit::WritebackEvent` 的回调，这个回调中：
+
+```cpp
+void
+LSQUnit::WritebackEvent::process()
+{
+    assert(!lsqPtr->cpu->switchedOut());
+
+    lsqPtr->writeback(inst, pkt);
+
+    assert(inst->savedRequest);
+    inst->savedRequest->writebackDone();
+    delete pkt;
+}
+```
+
+可以看到回调中调用了 writeback，而在这个 writeback 中：
+
+```cpp
+void
+LSQUnit::writeback(const DynInstPtr &inst, PacketPtr pkt)
+{
+    iewStage->wakeCPU();
+
+    // Squashed instructions do not need to complete their access.
+    if (inst->isSquashed()) {
+        assert (!inst->isStore() || inst->isStoreConditional());
+        ++stats.ignoredResponses;
+        return;
+    }
+
+    if (!inst->isExecuted()) {
+        inst->setExecuted();
+
+        if (inst->fault == NoFault) {
+            // Complete access to copy data to proper place.
+            inst->completeAcc(pkt);
+        } else {
+            // If the instruction has an outstanding fault, we cannot complete
+            // the access as this discards the current fault.
+
+            // If we have an outstanding fault, the fault should only be of
+            // type ReExec or - in case of a SplitRequest - a partial
+            // translation fault
+
+            // Unless it's a hardware transactional memory fault
+            auto htm_fault = std::dynamic_pointer_cast<
+                GenericHtmFailureFault>(inst->fault);
+
+            if (!htm_fault) {
+                assert(dynamic_cast<ReExec*>(inst->fault.get()) != nullptr ||
+                       inst->savedRequest->isPartialFault());
+
+            } else if (!pkt->htmTransactionFailedInCache()) {
+                // Situation in which the instruction has a hardware
+                // transactional memory fault but not the packet itself. This
+                // can occur with ldp_uop microops since access is spread over
+                // multiple packets.
+                DPRINTF(HtmCpu,
+                        "%s writeback with HTM failure fault, "
+                        "however, completing packet is not aware of "
+                        "transaction failure. cause=%s htmUid=%u\n",
+                        inst->staticInst->getName(),
+                        htmFailureToStr(htm_fault->getHtmFailureFaultCause()),
+                        htm_fault->getHtmUid());
+            }
+
+            DPRINTF(LSQUnit, "Not completing instruction [sn:%lli] access "
+                    "due to pending fault.\n", inst->seqNum);
+        }
+    }
+
+    // Need to insert instruction into queue to commit
+    iewStage->instToCommit(inst);
+
+    iewStage->activityThisCycle();
+
+    // see if this load changed the PC
+    iewStage->checkMisprediction(inst);
+}
+```
+
+可以看到比较重要的是进行了 `completeAcc`，正式将结果写回了寄存器，这个函数可以参考：
+
+```cpp
+Fault
+LDRH64_REG::completeAcc(
+    PacketPtr pkt, ExecContext *xc, trace::InstRecord *traceData) const
+{
+    Fault fault = NoFault;
+
+    uint64_t WDest = 0;
+    uint16_t Mem = {};
+    ;
+    ;
+
+    // ARM instructions will not have a pkt if the predicate is false
+    getMemLE(pkt, Mem, traceData);
+
+    if (fault == NoFault) {
+        WDest = cSwap(Mem, isBigEndian64(xc->tcBase()));
+        ;
+    }
+
+    if (fault == NoFault) {
+        xc->setRegOperand(this, 0, WDest & mask(32));
+        if (traceData)
+            traceData->setData(intRegClass, WDest);
+        ;
+    }
+
+    return fault;
+}
+```
+
+`setRegOperand` 很明显是在写回寄存器。
+
+然后将这条指令插入到向 commit 阶段传送的队列中(`iewStage->instToCommit(inst);`)，在后面的写回过程能够写回 load 出来的值。

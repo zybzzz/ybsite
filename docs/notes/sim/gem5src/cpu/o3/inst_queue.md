@@ -136,6 +136,8 @@ InstructionQueue::addToOrderList(OpClass op_class)
 }
 ```
 
+这个函数实际上是将 ready 的迭代器按照序号顺序排在 listOrder 队列中，在发射阶段按照顺序指派就是这样。
+
 ### addIfReady
 
 这个方法尝试将指令设置到 ready 状态。
@@ -706,7 +708,7 @@ InstructionQueue::doSquash(ThreadID tid)
 ## 其他 api
 
 1. `getInstToExecute`：从 instsToExecute 中拿出头部并返回。
-2. `moveToYoungerInst`：用某个 op_class 中新的指令代替 readyIt 中旧的指令。
+2. `moveToYoungerInst`：用某个 op_class 中新的指令代替 readyIt 中旧的指令，旧的指令后续可能会被移除。
 3. `commit`：对于某个tid，commit小于等于某个序列号的指令。
 4. `addReadyMemInst`：尝试将某个内存指令加入到 listOrder 中。
 5. `rescheduleMemInst`：尝试重新调度某个内存指令。
