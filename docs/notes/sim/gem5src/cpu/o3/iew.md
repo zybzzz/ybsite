@@ -543,6 +543,8 @@ InstructionQueue::scheduleReadyInsts()
 }
 ```
 
+指令发射实际上是在建模时序，等这个事件到了之后才被插入到执行队列中，等待执行阶段进行执行。
+
 ## 指令执行
 
 ```cpp
@@ -692,6 +694,7 @@ IEW::executeInsts()
         // instruction first, so the branch resolution order will be correct.
         ThreadID tid = inst->threadNumber;
 
+        // 实际上这个判断条件允许从多个可能导致清空的指令中选择最老的一个
         if (!fetchRedirect[tid] ||
             !toCommit->squash[tid] ||
             toCommit->squashedSeqNum[tid] > inst->seqNum) {
