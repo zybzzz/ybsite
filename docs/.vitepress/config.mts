@@ -291,6 +291,13 @@ export default defineConfig({
                 collapsed: true,
                 items: [
                   {
+                    text: 'pred',
+                    collapsed: true,
+                    items:[
+                      { text: 'tage_base', link: '/notes/sim/gem5src/cpu/pred/tage_base'}
+                    ]
+                  },
+                  {
                     text: 'minor',
                     collapsed: true,
                     items: [
