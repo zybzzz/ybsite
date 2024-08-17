@@ -253,6 +253,15 @@ export default defineConfig({
           },
 
           { //level2
+            text: 'open xiangshan',
+            collapsed: true,
+            items: [
+              { text: 'xiangshan simulation environment', link: '/notes/sim/xiangshan/xs_sim_env.md' },
+            ]
+          },
+
+
+          { //level2
             text: 'source code of gem5',
             collapsed: true,
             items: [
