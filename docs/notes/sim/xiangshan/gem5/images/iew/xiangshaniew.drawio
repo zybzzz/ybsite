@@ -1,0 +1,70 @@
+<mxfile host="Electron" modified="2024-08-23T09:14:41.840Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.5.3 Chrome/124.0.6367.207 Electron/30.0.6 Safari/537.36" etag="g-aeDRfLN28V0cNFyvut" version="24.5.3" type="device">
+  <diagram name="执行流程框图" id="ad_UwVjkP5mW93uQvALw">
+    <mxGraphModel dx="1434" dy="875" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="4000" pageHeight="3000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="wPVJwlbztC-w74GlP8TV-1" value="Rename" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="190" y="360" width="110" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="wPVJwlbztC-w74GlP8TV-3" value="dispatch queue" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="430" y="360" width="110" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="wPVJwlbztC-w74GlP8TV-4" value="issue queue" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="670" y="360" width="110" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="wPVJwlbztC-w74GlP8TV-5" value="FU" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="910" y="360" width="110" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="wPVJwlbztC-w74GlP8TV-6" value="" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="wPVJwlbztC-w74GlP8TV-1" target="wPVJwlbztC-w74GlP8TV-3">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="460" y="640" as="sourcePoint" />
+            <mxPoint x="510" y="590" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="wPVJwlbztC-w74GlP8TV-7" value="" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="540" y="384.5" as="sourcePoint" />
+            <mxPoint x="670" y="384.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="wPVJwlbztC-w74GlP8TV-8" value="" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="780" y="384.5" as="sourcePoint" />
+            <mxPoint x="910" y="384.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="wPVJwlbztC-w74GlP8TV-10" value="classifyInstToDispQue" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="300" y="430" width="130" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="wPVJwlbztC-w74GlP8TV-11" value="dispatchInstFromDispQue" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="530" y="430" width="150" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="wPVJwlbztC-w74GlP8TV-12" value="instqueue.insert" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="530" y="480" width="150" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="wPVJwlbztC-w74GlP8TV-13" value="scheduler.tick" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="760" y="430" width="150" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="wPVJwlbztC-w74GlP8TV-14" value="scheduler.issueAndSelect" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="760" y="470" width="150" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="wPVJwlbztC-w74GlP8TV-15" value="" style="endArrow=classic;html=1;rounded=0;strokeWidth=2;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1020" y="384.5" as="sourcePoint" />
+            <mxPoint x="1150" y="384.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="wPVJwlbztC-w74GlP8TV-16" value="instQueue.scheduleReadyInst(建模时序)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="1160" y="330" width="250" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="wPVJwlbztC-w74GlP8TV-17" value="executeInst(执行)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="1160" y="365" width="250" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="wPVJwlbztC-w74GlP8TV-18" value="writebackInst(写回)" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="1160" y="400" width="250" height="40" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

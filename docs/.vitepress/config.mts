@@ -257,6 +257,13 @@ export default defineConfig({
             collapsed: true,
             items: [
               { text: 'xiangshan simulation environment', link: '/notes/sim/xiangshan/xs_sim_env.md' },
+              { //level2
+                text: 'xiangshan gem5',
+                collapsed: true,
+                items: [
+                  { text: 'xiangshan iew', link: '/notes/sim/xiangshan/gem5/iew' },
+                ]
+              },
             ]
           },
 
