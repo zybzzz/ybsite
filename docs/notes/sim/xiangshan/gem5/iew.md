@@ -303,3 +303,204 @@ InstructionQueue::wakeDependents(const DynInstPtr &completed_inst)
     return dependents;
 }
 ```
+
+## 从就绪到发射
+
+香山 gem5 建模了从就绪到发射的过程，因此在依赖就绪之后，会选取 inout-port 数目条（这里这个数目能理解成发射队列一个周期能够读取的最大带宽）的指令作为等待发射的指令作为被 select 的指令，然后会对这个 select 的指令做进一步的检查，保证读取的寄存器数目在 slot-num 的数目之下，如果超过了这个数目，部分的指令会被取消，这两部分我认为做的事情都是一样的，都是在对指令发射队列的带宽进行建模。上述的这个过程在 `Scheduler::issueAndSelect` 中完成：
+
+```cpp
+void
+Scheduler::issueAndSelect(){
+    for (auto it : issueQues) {
+        it->issueToFu();
+    }
+    // must wait for all insts was issued
+    // 这里就是根据指令队列的 io-port 的带宽进行建模
+    for (auto it : issueQues) {
+        it->selectInst();
+    }
+    // 这里再根据 slot 的大小进一步的建模带宽
+    while (slotOccupied > slotNum) {
+        auto& slot = intSlot.top();
+        slot.inst->setArbFailed();
+        slotOccupied -= slot.resourceDemand;
+        DPRINTF(Schedule, "[sn %lu] remove from slot\n", slot.inst->seqNum);
+        intSlot.pop();
+    }
+
+    // reset slot status
+    // 清空 intslot，intslot其实没什么用，就是在上面那步比较slot大小的时候用
+    // 实际上后续用的指令就已经被保存到 selectedinst 中
+    // 因为 slot 不够而被取消的指令已经打上了 setArbFailed 的标记
+    slotOccupied = 0;
+    intSlot.clear();
+}
+```
+
+香山还建模了一个从选中到被发射到调度单元的延迟，实际上就是一个 timebuffer。但是在插入这个 timebuffer 之前，需要从 selectinsts 中把原本因为仲裁取消的指令去掉，重新插入到就绪队列中。这一部分在 scheduler 的 tick 中实现：
+
+```cpp
+void
+Scheduler::tick()
+{
+    for (auto it : issueQues) {
+        it->tick();
+    }
+}
+```
+
+这里实际上是调用了各个发射队列的 tick：
+
+```cpp
+void
+IssueQue::tick()
+{
+    iqstats->insertDist[instNumInsert]++;
+    instNumInsert = 0;
+
+    scheduleInst();
+    inflightIssues.advance();
+}
+```
+
+这里实际上在调用 `scheduleInst`：
+
+```cpp
+void
+IssueQue::scheduleInst()
+{
+    // here is issueStage 0
+    for (auto& inst : selectedInst) {
+        inst->clearInReadyQ();
+        if (inst->canceled()) {
+            DPRINTF(Schedule, "[sn %ld] was canceled\n", inst->seqNum);
+        } else if (inst->arbFailed()) {
+            DPRINTF(Schedule, "[sn %ld] arbitration failed, retry\n", inst->seqNum);
+            assert(inst->readyToIssue());
+            inst->setInReadyQ();
+            readyInsts.push(inst);// retry
+            iqstats->arbFailed++;
+        } else {
+            DPRINTF(Schedule, "[sn %ld] no conflict, scheduled\n", inst->seqNum);
+            toIssue->push(inst);
+            if (scheduler->getCorrectedOpLat(inst) <= 1) {
+                scheduler->wakeUpDependents(inst, this);
+            }
+        }
+        inst->clearArbFailed();
+    }
+    iqstats->issueDist[toIssue->size]++;
+}
+```
+
+很显然的看到就是对选中的指令做了各种处理然后写入到 timebuffer 中，注意上面的 toIssue 就是一端到 timebuffer 的连线。
+
+指令从上面的 timebuffer 中取出并正式发射到功能单元是在 `Scheduler::issueAndSelect` 方法的上半部分中实现的：
+
+```cpp
+void
+Scheduler::issueAndSelect(){
+    for (auto it : issueQues) {
+        it->issueToFu();
+    }
+    
+    // ...
+}
+```
+
+实际上调用的是发射队列的 `issueToFu`:
+
+```cpp
+void
+IssueQue::issueToFu()
+{
+    int size = toFu->size;
+    for (int i=0; i<size;i++) {
+        auto inst = toFu->pop();
+        if (!inst) {
+            continue;
+        }
+        checkScoreboard(inst);
+        addToFu(inst);
+        if (scheduler->getCorrectedOpLat(inst) > 1) {
+            scheduler->wakeUpDependents(inst, this);
+        }
+    }
+}
+```
+
+可以看到这里是从 toFu 中取出指令，toFU 实际就是上面 timebuffer 的另外一端，他在取出指令之后进行计分板依赖的再次检查，然后调用 addToFu:
+
+```cpp
+void
+Scheduler::addToFU(const DynInstPtr& inst)
+{
+    DPRINTF(Schedule, "[sn %lu] add to FUs\n", inst->seqNum);
+    instsToFu.push_back(inst);
+}
+```
+
+可以看到这里就是很简单的把指令插入到 `instsToFu` 中，供后续对指令执行的建模。实际上就是在 `instQueue.scheduleReadyInsts` 中开始对执行的时序开始建模了，这里就和原本 gem5 的代码很像了。
+
+## 指派到发射队列（保留站）
+
+这个过程都在 dispatch 这个函数中实现。主要分两步，一个是将 dispatch queue 中的指令向保留站转移，另一部分是将从 rename 中拿到的指令送到 dispatch queue 中。
+
+```cpp
+void
+IEW::dispatchInsts(ThreadID tid)
+{
+    dispatchInstFromDispQue(tid);
+    classifyInstToDispQue(tid);
+}
+```
+
+### dispatchInstFromDispQue
+
+这个部分的代码和原来 gem5 的 dispatch 很像，对于每个 dispatch queue 都进行处理，对于其中的指令插入到不同的队列，这里先拿最简单的整数类型的指令作为最通常的指令进行举例，这部分指令实际上在委托 scheduler.insert 来完成：
+
+```cpp
+void
+Scheduler::insert(const DynInstPtr& inst)
+{
+    inst->setInIQ();
+    auto iqs = dispTable[inst->opClass()];
+    assert(!iqs.empty());
+    bool inserted = false;
+
+    if (forwardDisp) {
+        for (auto iq : iqs) {
+            if (iq->ready()) {
+                iq->insert(inst);
+                inserted = true;
+                break;
+            }
+        }
+    } else {
+        for (auto iq = iqs.rbegin(); iq != iqs.rend(); iq++) {
+            if ((*iq)->ready()) {
+                (*iq)->insert(inst);
+                inserted = true;
+                break;
+            }
+        }
+    }
+    assert(inserted);
+    forwardDisp = !forwardDisp;
+    DPRINTF(Dispatch, "[sn %lu] dispatch: %s\n", inst->seqNum, inst->staticInst->disassemble(0));
+}
+```
+
+可以看到这一部分只是接近的找个随机的发射队列插了进去。
+
+### classifyInstToDispQue
+
+这部分就是把接受到的指令插入到 diapatch queue 中去，等待后续的处理。这个函数写的很复杂，主要做的事有这么几个，按照指令的操作类型将其插入到不同的 dispatch queue 中，在插入的时候进行各种统计变量的更新，另外就是将这个指令的目的寄存器作为生产者插入到依赖图中，然后就是更新一些统计变量。
+
+## 时序建模
+
+就整体的时序而言各部分应该都是各干各的，就函数的调用顺序而言总体干的是这些事。
+
+检查选中的指令，并对发射时间进行建模 -> 处理 rename 来的指令，并将原先 dispatch queue 中的指令转移到相关的 issue -> 建模 issue queue 中已经满足发射时间的指令，对其执行进行建模 -> 进行指令的执行 -> 进行指令的写回 -> 将已经完成发射建模的指令取出来，供后续执行建模使用 -> 选中(select)发射队列中的指令。
+
+整个过程中很多数据都是从 timebuffer 中获取的，因此顺序的先后不会产生影响，但是不从 timebuffer 中获取的顺序的先后可能会产生影响，这个要结合代码具体分析。需要注意的是 execwb 和后续 commit 阶段中使用的是一个位置，同时在整个 cpu 的执行 tick 中，iew 的 tick 在 commit 前面，因此 execwb 的修改可能是会影响到 commit 阶段的。
