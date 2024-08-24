@@ -248,7 +248,8 @@ export default defineConfig({
               { text: 'ThreadContext vs ExecContext', link: '/notes/sim/gem5/tcvsec' },
               { text: 'Probe system in gem5 (Simpoint example)', link: '/notes/sim/gem5/probesys' },
               { text: 'Weak simpoint support in gem5', link: '/notes/sim/gem5/simpoint_gem5' },
-              { text: 'Out Of Order cpu model in gem5', link: '/notes/sim/gem5/o3cpu_model' }
+              { text: 'Out Of Order cpu model in gem5', link: '/notes/sim/gem5/o3cpu_model' },
+              { text: 'gem5 RISC-V ISA implement', link: '/notes/sim/gem5/riscv_isa_impl' },
             ]
           },
 
