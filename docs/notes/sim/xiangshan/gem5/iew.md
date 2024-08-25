@@ -504,3 +504,51 @@ Scheduler::insert(const DynInstPtr& inst)
 检查选中的指令，并对发射时间进行建模 -> 处理 rename 来的指令，并将原先 dispatch queue 中的指令转移到相关的 issue -> 建模 issue queue 中已经满足发射时间的指令，对其执行进行建模 -> 进行指令的执行 -> 进行指令的写回 -> 将已经完成发射建模的指令取出来，供后续执行建模使用 -> 选中(select)发射队列中的指令。
 
 整个过程中很多数据都是从 timebuffer 中获取的，因此顺序的先后不会产生影响，但是不从 timebuffer 中获取的顺序的先后可能会产生影响，这个要结合代码具体分析。需要注意的是 execwb 和后续 commit 阶段中使用的是一个位置，同时在整个 cpu 的执行 tick 中，iew 的 tick 在 commit 前面，因此 execwb 的修改可能是会影响到 commit 阶段的。
+
+## 投机调度
+
+引入投机调度的原因是因为后端的建模对发射这个过程进行了建模，从发射到指令进入到 FU 是有一个延迟时间的。这样就会产生一个问题，在指令已经执行完成能够进行 bypass 前递的时候，后续能够接收这个前递的指令还没有对发射时间完成建模，从而导致在 bypass 之后，没有指令能够受到这个 bypass 带来的好处，因为他们此时还处在 ready 队列中，还没有进行发射时序的建模，不能立即进入到 FU 中。
+
+投机的调度实际上就是一定程度上解决这个问题，它希望达到的效果是提前从 ready 队列中抽出指令进行发射，进行发射时间的建模，即使这个时候的依赖还没有满足。这可能会带来的问题是 bypass 还没发生、依赖还没满足的时候，这个发射时间的建模就已经完成了，这样指令是不合法的，因此为了避免这个问题，指令的投机调度是需要严格控制好时间的，显然在香山 iew 的实现中对这个时间进行了控制。
+
+投机调度的源码为：
+
+```cpp
+void
+Scheduler::wakeUpDependents(const DynInstPtr& inst, IssueQue* from_issue_queue)
+{
+    if (inst->numDestRegs() == 0 || (inst->isVector() && inst->isLoad())) {
+        // ignore if vector load
+        return;
+    }
+
+    for (auto to : wakeMatrix[from_issue_queue->getId()]) {
+        int wakeDelay = 0;
+        int oplat = getCorrectedOpLat(inst);
+
+        if (oplat == 1 && (from_issue_queue->getIssueStages() > to->getIssueStages())) {
+            wakeDelay = from_issue_queue->getIssueStages() - to->getIssueStages();
+        } else if (oplat > to->getIssueStages()) {
+            wakeDelay = oplat - to->getIssueStages();
+        }
+
+        DPRINTF(Schedule, "[sn %lu] %s create wakeupEvent to %s, delay %d cycles\n",
+            inst->seqNum, from_issue_queue->getName(), to->getName(), wakeDelay);
+        if (wakeDelay == 0) {
+            to->wakeUpDependents(inst, true);
+        } else {
+            auto wakeEvent = new SpecWakeupCompletion(inst, to);
+            cpu->schedule(wakeEvent, cpu->clockEdge(Cycles(wakeDelay)) - 1);
+        }
+    }
+}
+```
+
+调用这段代码的场合有两个地方：
+
+1. IssueQue::scheduleInst 中，此时发射时间的建模还没开始，调用投机调度的条件为 scheduler->getCorrectedOpLat(inst) <= 1。
+2. IssueQue::issueToFu 中，此时发射时间的建模已经完成，调用投机调度的条件为 scheduler->getCorrectedOpLat(inst) > 1。
+
+这两种情况，第一种情况对应的上面的 if，第二种情况对应的是上面的 else if。对应的两种情况应该如下图所示：
+
+![spec schedule](./images/iew/specschedule.png)
