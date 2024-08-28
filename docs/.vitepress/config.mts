@@ -191,7 +191,14 @@ export default defineConfig({
                   { text: 'ch17 template', link: '/notes/langlearn/cpp/beginning-cpp20/ch17_template' },
                   { text: 'ch19 first-class function', link: '/notes/langlearn/cpp/beginning-cpp20/ch19_first-class_function' },
                 ]
-              }
+              },
+              { //level2
+                text: '现代c++语言核心特性解析',
+                collapsed: true,
+                items: [
+                  { text: '右值引用', link: '/notes/langlearn/cpp/core-feat-moderncpp/rvalue_reference' },
+                ]
+              },
             ]
           }
         ]
