@@ -140,13 +140,6 @@ export default defineConfig({
         ]
       },
 
-      {
-        text: 'Computer Architecture Class',
-        collapsed: false,
-        items: [
-          { text: 'computer-arch lab, spring 24, USTC', link: '/notes/ca/ca2024spring' },
-        ]
-      },
 
 
       {
@@ -197,6 +190,14 @@ export default defineConfig({
                 collapsed: true,
                 items: [
                   { text: '右值引用', link: '/notes/langlearn/cpp/core-feat-moderncpp/rvalue_reference' },
+                  { text: 'constexpr常量表达式', link: '/notes/langlearn/cpp/core-feat-moderncpp/constexpr' },
+                ]
+              },
+              { //level2
+                text: 'c++新经典',
+                collapsed: true,
+                items: [
+                  { text: '迭代器', link: '/notes/langlearn/cpp/cppnewjd/iter' },
                 ]
               },
             ]
