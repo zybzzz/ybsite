@@ -136,6 +136,7 @@ export default defineConfig({
                 { text: 'the C Pre-Processor(CPP) usage', link: '/notes/os-dev-use/linux-use/use-cpp' },
                 { text: 'the C runtime', link: '/notes/os-dev-use/linux-use/crt' },
                 { text: 'about abi', link: '/notes/os-dev-use/linux-use/abi' },
+                { text: 'System-V abi', link: '/notes/os-dev-use/linux-use/systemv-abi' },
             ]
           }
         ]
