@@ -16,6 +16,6 @@ hero:
 
 features:
   - title: News
-    details: This site was born on 2/22/2024!
+    details: I am about to begin my second year of master's studies.
 ---
 

@@ -2,14 +2,14 @@
 
 ![](/me.jpg)
 
-Hi 🤗 , I am Yibo Zhang. I am currently a first year master student in the School of Computer Science and Technology at the University of Science and Technology of China. Before that, I got my bachelor's degree from ZheJiang GongShang University. I would like to record some of my learning process here.
+Hi 🤗 , I am Yibo Zhang. I am currently a second year master student in the School of Computer Science and Technology at the University of Science and Technology of China. Before that, I got my bachelor's degree from ZheJiang GongShang University. I would like to record some of my learning process here.
 
 Keep going!
 
 ## Experience
 
 - Teaching Assistant of CS4014.01 Computer Architecture (Spring 2024)
-  - Course website: [computer arch spring 2024](https://computer-arch.gitlab.io/ca2024-pages/)
+- Teaching Assistant of COMP6004P.01 Foundations of Computer Systems (Fall 2024)
 
 ## Currently studying & Research interest
 
