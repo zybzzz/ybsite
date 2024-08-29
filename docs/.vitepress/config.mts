@@ -135,6 +135,7 @@ export default defineConfig({
                 { text: 'resolving linking issues', link: '/notes/os-dev-use/linux-use/resolve-link-issue' },
                 { text: 'the C Pre-Processor(CPP) usage', link: '/notes/os-dev-use/linux-use/use-cpp' },
                 { text: 'the C runtime', link: '/notes/os-dev-use/linux-use/crt' },
+                { text: 'about abi', link: '/notes/os-dev-use/linux-use/abi' },
             ]
           }
         ]

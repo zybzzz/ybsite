@@ -4,6 +4,8 @@
 
 ## API 与 ABI
 
+对 abi 的理解专门又有了一篇文章：[各类abi解析](./abi.md)
+
 暂时不知道 ABI 和这个问题有什么联系，但是 ABI 是很重要的概念，但是很复杂。理解 ABI 可以参考的资料有：
 
 1. [你们说的ABI，Application Binary Interface到底是什么东西？](https://www.zhihu.com/question/381069847)
