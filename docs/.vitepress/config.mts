@@ -273,6 +273,7 @@ export default defineConfig({
                 collapsed: true,
                 items: [
                   { text: 'xiangshan iew', link: '/notes/sim/xiangshan/gem5/iew' },
+                  { text: 'xiangshan unaligned load', link: '/notes/sim/xiangshan/gem5/trap_unaligned_mem' },
                 ]
               },
             ]
