@@ -139,6 +139,13 @@ export default defineConfig({
                 { text: 'System-V abi', link: '/notes/os-dev-use/linux-use/systemv-abi' },
                 { text: 'git', link: '/notes/os-dev-use/linux-use/git' },
             ]
+          },
+          { //level2
+            text: 'os 2024 nju',
+            collapsed: true,
+            items: [
+                { text: '操作系统状态机', link: '/notes/os-dev-use/linux-use/resolve-link-issue' },
+            ]
           }
         ]
       },
