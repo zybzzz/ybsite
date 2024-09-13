@@ -493,6 +493,8 @@ Commit::squashAll(ThreadID tid)
 
 ## riscv-pk
 
+(生成的检查点应该托管在pk上)
+
 通过观察之前产生 fault 时候使用的中断向量号，可以发现非对齐内存访问的中断号为 4，到 riscv-pk 中去找，发现在 machine/mentry.S 中：
 
 ```cpp

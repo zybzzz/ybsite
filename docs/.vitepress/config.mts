@@ -276,6 +276,7 @@ export default defineConfig({
             collapsed: true,
             items: [
               { text: 'xiangshan simulation environment', link: '/notes/sim/xiangshan/xs_sim_env.md' },
+              { text: 'xiangshan fs workload gen', link: '/notes/sim/xiangshan/xs_wl_gen.md' },
               { //level2
                 text: 'xiangshan gem5',
                 collapsed: true,
