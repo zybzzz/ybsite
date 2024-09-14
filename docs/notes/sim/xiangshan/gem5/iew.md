@@ -552,3 +552,14 @@ Scheduler::wakeUpDependents(const DynInstPtr& inst, IssueQue* from_issue_queue)
 这两种情况，第一种情况对应的上面的 if，第二种情况对应的是上面的 else if。对应的两种情况应该如下图所示：
 
 ![spec schedule](./images/iew/specschedule.png)
+
+## 函数总结
+
+| **方法**                         | **举措**                                                                                                                                                          |
+|----------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **instQueue.scheduleReadyInsts** | **执行时序建模**                                                                                                                                                  |
+| **executeInsts**                 | **执行指令**                                                                                                                                                      |
+| **writebackInsts**               | **指令写回**                                                                                                                                                      |
+| **issueAndSelect**               | **1.把发射时序建模完成的指令放到队列中，供instQueue.scheduleReadyInsts使用。 2.从保留站中选取下一波能够发射的指令，通过设置的读写端口数仲裁哪些指令到底能发射。** |
+| **scheduler->tick**              | **根据仲裁的结果更新，建模发射延时**                                                                                                                              |
+| **dispatch**                     | **1. 从 rename 获取指令到调度队列。 2. 调度指令到保留站。**                                                                                                       |
