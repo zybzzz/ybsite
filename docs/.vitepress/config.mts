@@ -283,6 +283,7 @@ export default defineConfig({
                 items: [
                   { text: 'xiangshan iew', link: '/notes/sim/xiangshan/gem5/iew' },
                   { text: 'xiangshan unaligned load', link: '/notes/sim/xiangshan/gem5/trap_unaligned_mem' },
+                  { text: 'Additions to the commit phase(squash, trap ...)', link: '/notes/sim/xiangshan/gem5/addition_commit' },
                 ]
               },
             ]
