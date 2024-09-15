@@ -466,5 +466,6 @@ LSQ::pushRequest(const DynInstPtr& inst, bool isLoad, uint8_t *data,
 }
 ```
 
-这里全部还只是 initacc 的过程，还是没有包括 TLB 翻译还有 lsq unit read 的，这两个放到后续记录
+这里全部还只是 initacc 的过程，还是没有包括 TLB 翻译还有 lsq unit read 的，这两个放到后续记录。
+
 ---
