@@ -47,11 +47,11 @@ class LSQRequest : public BaseMMU::Translation, public Packet::SenderState
     // 定义的当前的请求所处的状态
     enum class State
     {
-        NotIssued,
-        Translation,
-        Request,
-        Fault,
-        PartialFault,
+        NotIssued,// 什么事都还没做
+        Translation,// 正在地址翻译
+        Request,// 正在请求内存进行数据访问
+        Fault,//访问出错
+        PartialFault,// 部分访问出错
     };
     State _state;
     void setState(const State& newState) { _state = newState; }
@@ -428,7 +428,7 @@ class LSQRequest : public BaseMMU::Translation, public Packet::SenderState
 
 1. addrequest: 构造出底层的 request，将这个request插入到 _req 中。
 2. forward：是和 storebuffer 相关的。
-3. sendFragmentToTranslation:进行翻译，对指定的一个底层request进行翻译，调用的是相关体系结构 tlb 进行的翻译。
+3. sendFragmentToTranslation:进行翻译，对指定的一个底层request进行翻译，调用的是相关体系结构 tlb 进行的翻译，这里指的是对单个的 request 进行翻译。
 
 ```cpp
 void
@@ -513,24 +513,7 @@ TLB::translate(const RequestPtr &req, ThreadContext *tc,
 
         return fault;
     } else {
-        // In the O3 CPU model, sometimes a memory access will be speculatively
-        // executed along a branch that will end up not being taken where the
-        // address is invalid.  In that case, return a fault rather than trying
-        // to translate it (which will cause a panic).  Since RISC-V allows
-        // unaligned memory accesses, this should only happen if the request's
-        // length is long enough to wrap around from the end of the memory to
-        // the start.
-        assert(req->getSize() > 0);
-        if (req->getVaddr() + req->getSize() - 1 < req->getVaddr())
-            return std::make_shared<GenericPageTableFault>(req->getVaddr());
-
-        Process * p = tc->getProcessPtr();
-
-        Fault fault = p->pTable->translate(req);
-        if (fault != NoFault)
-            return fault;
-
-        return NoFault;
+        // not in full system
     }
 }
 
@@ -771,3 +754,76 @@ TLB::doTranslate(const RequestPtr &req, ThreadContext *tc,
 ```
 
 在上面所有都完成时候如果没有产生延迟的话， lsqunit 会执行 finish 的操作，而这个 finish 的操作是各个 LSQUnit 的子类实现的。
+
+### 定义的纯虚函数
+
+1. markAsStaleTranslation:标记什么时候被认为翻译终止
+2. initiateTranslation:标记翻译开始
+3. recvTimingResp:接受到返回的请求
+4. sendPacketToCache:向 cache 发送请求
+5. buildPackets：构建底层通信使用的数据包
+6. handleLocalAccess:暂时不明确
+7. isCacheBlockHit:某个 cache 行命中，暂时不明确
+8. finish: 完成地址翻译，来自 mmu translation
+
+## SingleDataRequest
+
+1. finish:主要就是表示传输完成，对状态进行一些改变。
+2. initiateTranslation: build 出一个底层的 request，并开始地址翻译，如果经过 addReq 的判断不需要生成 request，则 setMemAccPredicate 为false。
+3. markAsStaleTranslation: 通过简单的判断手段设置 hasStaleTranslation 为 true.
+4. recvTimingResp: 直接调用 lsq 的 completeDataAccess.
+5. buildPackets:就是 build 出一个底层传输的 packet。
+6. isCacheBlockHit handleLocalAccess:组合配对的操作。
+7. sendPacketToCache：像获取数据的开始。
+
+signle 中进行操作的时候进行了大部分 == 1 的检查，实际上想表示的是这个请求最多想维护一个包。
+
+## UnsquashableDirectRequest
+
+硬件事务内存和取 ITLB 的时候使用，是不可暂停的。访问的时候不需要地址转换，直接设置物理地址的访问。
+
+## SplitDataRequest
+
+主要维护的是跨 cache 的地址访问，因此其可能向内存发出多个请求包。
+
+1. isCacheBlockHit handleLocalAccess:isCacheBlockHit 无非是对其中管理的多个 request 进行判断。
+2. sendPacketToCache: 将多个包发送到 cache。
+
+```cpp
+bool
+LSQ::SplitDataRequest::sendPacketToCache()
+{
+    /* Try to send the packets. */
+    bool bank_conflict = false;
+    while (numReceivedPackets + _numOutstandingPackets < _packets.size()) {
+        bool success = lsqUnit()->trySendPacket(isLoad(), _packets.at(numReceivedPackets + _numOutstandingPackets),
+                                                bank_conflict);
+        if (success) {
+            _numOutstandingPackets++;
+        } else {
+            // 一旦有阻塞的就暂停发送
+            break;
+        }
+    }
+    // 一旦有不成功的就要下个周期重新试
+    if (bank_conflict) {
+        lsqUnit()->bankConflictReplaySchedule();
+    }
+
+    // 全部成功送出去返回 true
+    if (_numOutstandingPackets == _packets.size()) {
+        return true;
+    }
+    return false;
+}
+```
+
+3. buildPackets:创建出多个包，无非就是 load 的时候产生一个 main packet。
+4. recvTimingResp: 无非就是合并多个包的状态。
+5. markAsStaleTranslation: 没有任何与其他的不同。
+6. finish:无非就是多个产生 translation 的包。
+7. initiateTranslation: 无非就是管理多个翻译。
+
+## SbufferRequest
+
+委托对 store buffer 的请求。
