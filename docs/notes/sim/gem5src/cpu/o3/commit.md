@@ -647,7 +647,7 @@ Commit::commitHead(const DynInstPtr &head_inst, unsigned inst_num)
     // 获取到线程号
     ThreadID tid = head_inst->threadNumber;
 
-    // 如果这条指令还没被执行，IEW 阶段决定了这个标志是否被设置
+    // 根据下面的提示基本可以认为，落到 commit 阶段还没被执行的指令一定是 nospec 的指令
     if (!head_inst->isExecuted()) {
         assert(head_inst->isNonSpeculative() || head_inst->isStoreConditional()
                || head_inst->isReadBarrier() || head_inst->isWriteBarrier()
@@ -660,6 +660,9 @@ Commit::commitHead(const DynInstPtr &head_inst, unsigned inst_num)
                 "at the head of the ROB, PC %s.\n",
                 tid, head_inst->seqNum, head_inst->pcState());
 
+        // 这部分后面做的其实就是想要给前面的 iew 提供 nospec 的号码
+        // 让前面的 iew 开始执行 nospec
+        // 首先要保证所有的内存指令都已经被写回了 
         if (inst_num > 0 || iewStage->hasStoresToWB(tid)) {
             DPRINTF(Commit,
                     "[tid:%i] [sn:%llu] "
@@ -668,13 +671,14 @@ Commit::commitHead(const DynInstPtr &head_inst, unsigned inst_num)
             return false;
         }
 
-        // inst_num == 0 && !iewStage->hasStoresToWB(tid) 才执行后面的
+        // i在写回了之后对 nospec 的号码进行设置
 
         toIEW->commitInfo[tid].nonSpecSeqNum = head_inst->seqNum;
 
-        // 清除这条指令能被 commit 的标志，因为其还没背执行
+        // 现在准备要被调度执行了
         head_inst->clearCanCommit();
 
+        // 分别向前面传递不同的信息
         if (head_inst->isLoad() && head_inst->strictlyOrdered()) {
             DPRINTF(Commit, "[tid:%i] [sn:%llu] "
                     "Strictly ordered load, PC %s.\n",
@@ -688,6 +692,7 @@ Commit::commitHead(const DynInstPtr &head_inst, unsigned inst_num)
 
         return false;
     }
+    //上面一旦返回 false，所有指令的提交就都无法继续了，实现了顺序的功能
 
     // 检查前面指令本身的执行是不是触发了异常
     Fault inst_fault = head_inst->getFault();

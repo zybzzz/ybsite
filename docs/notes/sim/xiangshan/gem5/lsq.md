@@ -1044,3 +1044,63 @@ if (!fetchRedirect[tid] || !execWB->squash[tid] || execWB->squashedSeqNum[tid] >
 ### commit 阶段
 
 正常提交。
+
+## no spec
+
+### 指派阶段
+
+会调用特殊的 insertBarrierSN 函数，会根据这个指令是 load 还是 store 类型插入屏障，仅此而已。
+
+### 提交阶段
+
+参考[这篇文章](../../gem5src/cpu/o3/commit.md)，提交阶段满足了 nospec 的要求之后，才能能够进行 nospec 的调度。
+
+### 调度
+
+```cpp
+if (fromCommit->commitInfo[tid].nonSpecSeqNum != 0) {
+
+    // DPRINTF(IEW,"NonspecInst from thread %i",tid);
+    // strictlyOrdered 和 no-spec 都代表了一种排序
+    // 因此同一时间选取一个执行
+    // 因为 commit 是顺序的，所以最早的那个肯定会先在这里被执行
+    if (fromCommit->commitInfo[tid].strictlyOrdered) {
+        instQueue.replayMemInst(fromCommit->commitInfo[tid].strictlyOrderedLoad);
+        fromCommit->commitInfo[tid].strictlyOrderedLoad->setAtCommit();
+    } else {
+        instQueue.scheduleNonSpec(fromCommit->commitInfo[tid].nonSpecSeqNum);
+    }
+}
+```
+
+直到接收了 commit 阶段的信号之后，在符合条件的情况下才进行了 schedule nospec 的操作。
+
+```cpp
+void
+InstructionQueue::scheduleNonSpec(const InstSeqNum &inst)
+{
+    DPRINTF(IQ,
+            "Marking nonspeculative instruction [sn:%llu] as ready "
+            "to execute.\n",
+            inst);
+
+    NonSpecMapIt inst_it = nonSpecInsts.find(inst);
+
+    assert(inst_it != nonSpecInsts.end());
+
+    ThreadID tid = (*inst_it).second->threadNumber;
+
+    (*inst_it).second->setAtCommit();
+    (*inst_it).second->setCanIssue();
+
+    scheduler->addToFU((*inst_it).second);
+
+    (*inst_it).second = NULL;
+
+    nonSpecInsts.erase(inst_it);
+}
+```
+
+这部分简单的来讲就是把指令塞到调度队列里面开始调度。
+
+
