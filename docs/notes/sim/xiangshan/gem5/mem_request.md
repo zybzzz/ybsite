@@ -2,6 +2,10 @@
 
 ## LSQRequest
 
+LSQ Request 的概念图如下：
+
+![lsqrequest](./images/lsq/lsqrequest.png)
+
 LSQRequest 主要经历了地址翻译，发包收包的过程，并且在每个过程结束的时候可能都进行了 squash 的判断。访存过程中使用到的多个 LSQRequest 都是对原始的 LSQRequest 的封装。
 
 ```cpp
