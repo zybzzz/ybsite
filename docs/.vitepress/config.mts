@@ -216,7 +216,7 @@ export default defineConfig({
       },
 
       { //level1
-        text: 'Simulators & gem5',
+        text: 'Simulators',
         collapsed: false,
         items: [
           { //level2
@@ -268,6 +268,14 @@ export default defineConfig({
               { text: 'Weak simpoint support in gem5', link: '/notes/sim/gem5/simpoint_gem5' },
               { text: 'Out Of Order cpu model in gem5', link: '/notes/sim/gem5/o3cpu_model' },
               { text: 'gem5 RISC-V ISA implement', link: '/notes/sim/gem5/riscv_isa_impl' },
+            ]
+          },
+
+          { //level2
+            text: 'qemu',
+            collapsed: true,
+            items: [
+              { text: 'qemu build process', link: '/notes/sim/qemu/buildprocess' },
             ]
           },
 
