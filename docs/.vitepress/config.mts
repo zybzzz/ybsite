@@ -281,6 +281,7 @@ export default defineConfig({
                 text: 'xiangshan gem5',
                 collapsed: true,
                 items: [
+                  { text: 'xiangshan gem5 arch', link: '/notes/sim/xiangshan/gem5/xsgem5arch' },
                   { text: 'xiangshan fetch', link: '/notes/sim/xiangshan/gem5/fetch' },
                   { text: 'xiangshan iew', link: '/notes/sim/xiangshan/gem5/iew' },
                   { text: 'xiangshan unaligned load', link: '/notes/sim/xiangshan/gem5/trap_unaligned_mem' },
