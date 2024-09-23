@@ -146,6 +146,20 @@ export default defineConfig({
             items: [
                 { text: '操作系统状态机', link: '/notes/os-dev-use/linux-use/resolve-link-issue' },
             ]
+          },
+          { //level2
+            text: 'linux kernel',
+            collapsed: true,
+            link: '/notes/os-dev-use/kernel/index',
+            items: [
+              { //level3
+                text: 'build process',
+                collapsed: true,
+                items: [
+                    { text: 'kernel build process', link: '/notes/os-dev-use/kernel/build-process/build' },
+                ]
+              }
+            ]
           }
         ]
       },
