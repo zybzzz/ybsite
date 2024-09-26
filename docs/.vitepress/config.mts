@@ -109,6 +109,13 @@ export default defineConfig({
             ]
           },
           { //level2
+            text: 'risc-v',
+            collapsed: true,
+            items: [
+              { text: 'sbi & opensbi', link: '/notes/arch/risc-v/sbi' },
+            ]
+          },
+          { //level2
             text: 'snippets',
             collapsed: true,
             items: [
