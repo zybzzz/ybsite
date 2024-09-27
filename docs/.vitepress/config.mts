@@ -164,6 +164,7 @@ export default defineConfig({
                 collapsed: true,
                 items: [
                     { text: 'kernel build process', link: '/notes/os-dev-use/kernel/build-process/build' },
+                    { text: 'kernel init -- asm', link: '/notes/os-dev-use/kernel/init/initasm' },
                 ]
               }
             ]
