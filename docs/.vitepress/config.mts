@@ -66,6 +66,13 @@ export default defineConfig({
               { text: 'Roofline model', link: '/notes/paper-reading/papers/roofline.md' },
             ]
           },
+          { //level2
+            text: 'perf analysis',
+            collapsed: true,
+            items: [
+              { text: 'top-down analysis', link: '/notes/paper-reading/perf-analy/top-down' },
+            ]
+          },
         ]
       },
 
