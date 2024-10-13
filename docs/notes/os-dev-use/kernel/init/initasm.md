@@ -42,7 +42,7 @@ SYM_CODE_START(_start)
 #endif /* CONFIG_MMU */
 ```
 
-设置页表等等。
+设置页表等等。同时对 satp 这个寄存器进行相关的写操作，标志虚拟内存的开启。
 
 - 设置中断向量
 
