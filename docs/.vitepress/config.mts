@@ -1,9 +1,13 @@
-import { defineConfig } from 'vitepress'
+import { defineConfig } from 'vitepress';
+import  footnote_plugin  from 'markdown-it-footnote';
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   markdown: {
-    math: true
+    math: true,
+    config: (md) => {
+      md.use(footnote_plugin);
+    },
   },
   base: '/ybsite/',
   lastUpdated: true,
