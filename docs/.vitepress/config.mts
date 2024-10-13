@@ -1,9 +1,13 @@
-import { defineConfig } from 'vitepress'
+import { defineConfig } from 'vitepress';
+import citationPlugin from './citationPlugin';
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   markdown: {
-    math: true
+    math: true,
+    config: (md) => {
+      md.use(citationPlugin);
+    },
   },
   base: '/ybsite/',
   lastUpdated: true,
