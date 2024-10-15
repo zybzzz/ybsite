@@ -104,5 +104,74 @@ long cache miss 是指对 l2 以及一下存储层次进行访问的时候的计
 
 以上就是这篇文章提出的方法，非常的厉害，从 ipc 的角度进行思考，在现代的超标量处理器上，新的事件可能会更多，要针对情况进行分析。同时这个角度给我们的启示是，对于前端，我们主要抓指令的 dispatch，对于后端我们主要抓指令的 rob commit。
 
+## Yasin's top-down
+
+这是 Intel VTun 系列工具中采用的 top-down 方法，具体的思想和 Lieven 的 top-down 很像。但是从个人的视角来看，这套方法是在解构程序运行时候的资源利用，来显示出程序运行时候的瓶颈所在，进而为软件的优化或者微体系结构的研究提供指导。
+
+所谓的硬件资源的利用是在 issue-select 的时候，计算指令发射槽的利用。简单的来讲，对于发射宽度为 6 的机器，在单个时钟周期内就有 6 个发射槽能够使用，而发射槽不一定会被填满，可能会有一些原因导致发射槽不能充分利用，分析发射槽的使用率：如果使用了，用到了哪里？如果没使用，是什么原因导致的没使用？利用 pmu 的计数器计数并计算出相关的原因，构成了 top-down 对于瓶颈的分析。对于现代的超标量处理器而言，假设程序的运行时间为为 $n$ 时钟周期，发射宽度为 $m$，则总共产生的资源数为 $n \times m$。
+
+### top-down 的 top layer
+
+![top-down-top-layer](./images/top-down/top-down-top-layer-build.png)
+
+从资源利用率入手，top-down 架构的顶层计数到底该如何实现？上面的图中就讲述了顶层架构的实现。最简单的，就是对于一段程序，最直观的展现在面前的 4 个大类。对于这 4 个大类，都是紧紧抓住资源的分配利用做分析。
+
+#### 资源成功分配
+
+对于资源的成功分配，很自然的想法就是前端成功供应指令、后端成功消耗指令，这在 top-layer 中被归类成 retireing，即正确退役的情况。然后就是图中的另一种情况，应该把他理解成“虚假的成功分配”，即由于预测错误处在的清空阶段，前端后端都还在清空状态，没有正常工作，这种时间内浪费的资源被归类到 bad speculation 中。
+
+#### 资源没有成功分配
+
+资源没有成功分配，很显然的存在着两种情况，前端没有提供指令到发射槽，还是后端没有将指令处理完，这很显然的又分成了两类。由此，形成了 4 类的 top 分分类。
+
+### top-down 的细分
+
+![yasin top-down detail](./images/top-down/yasin-topdown-detail.png)
+
+在往下进行 top-down 的细分，top-down 就像一棵树一样展开，直到展开到最底层的架构，最底层架构的数据还是来自于 pmu 的。架构如何展开，无非是对于硬件资源去向的进一步发问，如预测错误这一类别，又可以因为预测错误的原因分成分支错误还是其他的错误，然后可以根据两者的 pmu 计数统计两者的比例。因此很自然的可以得出结论，同一级的原因之间是可以进行比较的。这样的 top-down 结构很好的一点就是，可以从顶层中先发现问题所在，选择一个占比大的区域，然后下降到下一层，根据下一层中的占比情况，选择一个比较高的，再往下下降，直到分析出具体的瓶颈为止。此外，还能得出的一点结论就是，不同层级之间的比较，不同类别之间的比较是没有意义的。
+
+下面对各个层级谈谈自己的理解：
+
+- Frontend Bound：指令供给不上去。
+  - Fetch Latency:延迟导致的指令供给不上去。
+    - iTLB Miss：iTLB miss 导致的延迟等待。
+    - icache Miss：同上。
+    - other
+  - Fetch BandWidth:译码带宽导致的指令供给不上去，即单位时钟周期内提供的译码数目太少了。
+    - Fetch Src1：来自译码器1.
+    - Fetch Src2：来自译码器2.
+- Bad Speculation:错误的预测。
+  - branch missprediction: 分支指令预测错误导致的清空。
+  - machine clean:其他指令如访存违反导致的内存清空。
+- Retiring:正常退役的指令。
+  - Base：基本指令。
+    - FP-arith:浮点指令
+      - Scalar：标量
+      - Vector：向量
+    - Other：其他指令：整数类型的可以包括在这一类里
+- Backend Bound：指令消耗不掉
+  - Core Bound:计算单元的计算性能受限
+    - Divider: 除法（长延时操作）
+    - Execution Port Utilzation: 计算单元的利用率。(和上面有时候会产生重叠，情况比较难分析)
+      - 1 port
+      - 2 port
+      - 3 port
+      - 4 port
+  - Memory Bound:存储上的性能受限
+    - store bounds
+    - L1 bounds
+    - L2 bounds
+    - L3 bounds
+    - Memory bounds
+      - Memory Latency: 数据供给太慢
+      - Memory Bandwidth: 数据供给太少
+
+这里需要注意的有两点：
+
+1. 无论如何都要首先降低 bad speculation 的比例。在本统计方法中，由于预测错误导致的错误路径上的统计数据还是会被记录的，因此，错误的路径太多会导致整体的计数不准，因此首先必须降低 bad speculation 来降低其他统计的不准确性。
+2. Retiring 这个大类记录的是所有正常退役的指令，它给我们的启示是正常退役的指令的数目，可以考虑向量化来降低指令的数目。
+
+具体 pmu 的架构等之后有时间在看吧。
+
 [^1]: Eyerman, Stijn, et al. "A performance counter architecture for computing accurate CPI components." ACM SIGPLAN Notices 41.11 (2006): 175-184.
 [^2]: Yasin, Ahmad. "A top-down method for performance analysis and counters architecture." 2014 IEEE International Symposium on Performance Analysis of Systems and Software (ISPASS). IEEE, 2014.
