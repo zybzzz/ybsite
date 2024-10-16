@@ -71,6 +71,7 @@ export default defineConfig({
             collapsed: true,
             items: [
               { text: 'top-down analysis', link: '/notes/paper-reading/perf-analy/top-down' },
+              { text: 'simpoint', link: '/notes/paper-reading/perf-analy/simpoint' },
             ]
           },
         ]
