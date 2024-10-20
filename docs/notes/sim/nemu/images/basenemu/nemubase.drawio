@@ -1,0 +1,62 @@
+<mxfile host="Electron" modified="2024-10-20T19:09:46.957Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.5.3 Chrome/124.0.6367.207 Electron/30.0.6 Safari/537.36" etag="x_VRxl8OgYXlePJXLXS0" version="24.5.3" type="device">
+  <diagram name="第 1 页" id="wlZun4GItgdoMOUHJ1Az">
+    <mxGraphModel dx="1114" dy="760" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="4000" pageHeight="3000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="OwkE2qkPaH71k1BJ2eov-1" value="" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=2;fontFamily=Courier New;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="400" y="430" width="100" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="OwkE2qkPaH71k1BJ2eov-3" value="" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=2;fontFamily=Courier New;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="400" y="160" width="100" height="230" as="geometry" />
+        </mxCell>
+        <mxCell id="OwkE2qkPaH71k1BJ2eov-4" value="" style="rounded=0;whiteSpace=wrap;html=1;strokeWidth=2;fontFamily=Courier New;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="400" y="390" width="100" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="OwkE2qkPaH71k1BJ2eov-6" value="Reg" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;strokeWidth=2;fontFamily=Courier New;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="420" y="395" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="OwkE2qkPaH71k1BJ2eov-7" value="Restore" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;strokeWidth=2;fontFamily=Courier New;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="420" y="450" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="OwkE2qkPaH71k1BJ2eov-8" value="opensbi&lt;div style=&quot;font-size: 14px;&quot;&gt;linux&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;strokeWidth=2;fontFamily=Courier New;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="420" y="270" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="OwkE2qkPaH71k1BJ2eov-9" value="0x80000000" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;strokeWidth=2;fontFamily=Courier New;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="510" y="490" width="80" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="OwkE2qkPaH71k1BJ2eov-10" value="0x80100000" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;strokeWidth=2;fontFamily=Courier New;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="510" y="370" width="80" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="OwkE2qkPaH71k1BJ2eov-11" value="0x80000000 + BBL_OFFSET" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;strokeWidth=2;fontFamily=Courier New;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="620" y="370" width="200" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="OwkE2qkPaH71k1BJ2eov-12" value="" style="endArrow=classic;html=1;rounded=0;entryX=0.41;entryY=1.133;entryDx=0;entryDy=0;entryPerimeter=0;strokeWidth=2;fontFamily=Courier New;fontSize=14;" edge="1" parent="1" target="OwkE2qkPaH71k1BJ2eov-11">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="510" y="430" as="sourcePoint" />
+            <mxPoint x="640" y="410" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="OwkE2qkPaH71k1BJ2eov-13" value="链接脚本也要把数据摆到这个位置" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;strokeWidth=2;fontFamily=Courier New;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="570" y="420" width="220" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="OwkE2qkPaH71k1BJ2eov-17" value="" style="edgeStyle=segmentEdgeStyle;endArrow=classic;html=1;curved=0;rounded=0;endSize=8;startSize=8;entryX=-0.05;entryY=0.4;entryDx=0;entryDy=0;entryPerimeter=0;strokeWidth=2;fontFamily=Courier New;fontSize=14;" edge="1" parent="1" target="OwkE2qkPaH71k1BJ2eov-1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="390" y="410" as="sourcePoint" />
+            <mxPoint x="320" y="460" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="290" y="410" />
+              <mxPoint x="290" y="458" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="OwkE2qkPaH71k1BJ2eov-18" value="寄存器中的数据会被 restorer 读取" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;strokeWidth=2;fontFamily=Courier New;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="90" y="420" width="190" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="OwkE2qkPaH71k1BJ2eov-19" value="打包的时候是把这个2G的内存都压缩打包" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;strokeWidth=2;fontFamily=Courier New;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="330" y="590" width="240" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

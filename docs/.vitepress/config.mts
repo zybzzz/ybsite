@@ -314,6 +314,14 @@ export default defineConfig({
           },
 
           { //level2
+            text: 'nemu',
+            collapsed: true,
+            items: [
+              { text: 'nemu base & difftest with gem5', link: '/notes/sim/nemu/baseanddiff' },
+            ]
+          },
+
+          { //level2
             text: 'open xiangshan',
             collapsed: true,
             items: [
