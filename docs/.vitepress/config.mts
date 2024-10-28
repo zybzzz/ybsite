@@ -304,6 +304,7 @@ export default defineConfig({
               { text: 'Weak simpoint support in gem5', link: '/notes/sim/gem5/simpoint_gem5' },
               { text: 'Out Of Order cpu model in gem5', link: '/notes/sim/gem5/o3cpu_model' },
               { text: 'gem5 RISC-V ISA implement', link: '/notes/sim/gem5/riscv_isa_impl' },
+              { text: 'gem5 stats', link: '/notes/sim/gem5/stats' },
             ]
           },
 
