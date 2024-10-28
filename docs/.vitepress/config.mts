@@ -158,6 +158,7 @@ export default defineConfig({
                 { text: 'System-V abi', link: '/notes/os-dev-use/linux-use/systemv-abi' },
                 { text: 'git', link: '/notes/os-dev-use/linux-use/git' },
                 { text: 'Disks, partitions, file systems', link: '/notes/os-dev-use/linux-use/disk_fs' },
+                { text: 'X11 & tty', link: '/notes/os-dev-use/linux-use/x11' },
             ]
           },
           { //level2
