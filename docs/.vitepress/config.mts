@@ -244,6 +244,7 @@ export default defineConfig({
                 collapsed: true,
                 items: [
                   { text: '迭代器', link: '/notes/langlearn/cpp/cppnewjd/iter' },
+                  { text: '对象模型', link: '/notes/langlearn/cpp/cppnewjd/obj_model' },
                 ]
               },
             ]
