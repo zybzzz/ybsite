@@ -10,14 +10,14 @@
 
 使用格式块的典型两段代码为：
 
-```cpp
+```python
 decode OPCODE {
   0: Integer::add({{ Rc = Ra + Rb; }});
   1: Integer::sub({{ Rc = Ra - Rb; }});
 }
 ```
 
-```cpp
+```python
 decode OPCODE {
   format Integer {
     0: add({{ Rc = Ra + Rb; }});
