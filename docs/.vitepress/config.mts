@@ -247,6 +247,13 @@ export default defineConfig({
                   { text: '对象模型', link: '/notes/langlearn/cpp/cppnewjd/obj_model' },
                 ]
               },
+              { //level2
+                text: '杂记 随笔',
+                collapsed: true,
+                items: [
+                  { text: 'first look at template', link: '/notes/langlearn/cpp/snippets/first_look_template' },
+                ]
+              },
             ]
           }
         ]
@@ -306,6 +313,7 @@ export default defineConfig({
               { text: 'Out Of Order cpu model in gem5', link: '/notes/sim/gem5/o3cpu_model' },
               { text: 'gem5 RISC-V ISA implement', link: '/notes/sim/gem5/riscv_isa_impl' },
               { text: 'gem5 stats', link: '/notes/sim/gem5/stats' },
+              { text: 'gem5 reg arch', link: '/notes/sim/gem5/reg_arch' },
             ]
           },
 
