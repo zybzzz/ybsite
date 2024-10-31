@@ -1,6 +1,6 @@
 # isa dsl
 
-参考[旧网站](https://old.gem5.org/The_M5_ISA_description_language.html)。整个部分的解析是 isa_parser 做的。
+参考[旧网站](https://old.gem5.org/The_M5_ISA_description_language.html)。整个部分的解析是 isa_parser 做的。参照官网看，md 渲染有问题。
 
 ## 解码部分
 
@@ -10,27 +10,11 @@
 
 使用格式块的典型两段代码为：
 
-```python
-decode OPCODE {
-  0: Integer::add({{ Rc = Ra + Rb; }});
-  1: Integer::sub({{ Rc = Ra - Rb; }});
-}
-```
-
-```python
-decode OPCODE {
-  format Integer {
-    0: add({{ Rc = Ra + Rb; }});
-    1: sub({{ Rc = Ra - Rb; }});
-  }
-}
-```
-
 decoder 解释到最后无非就是把 decoder.isa 中的定义转换成 cpp 中的 staticInst，这里的 format 就决定了以后生成的这个 cpp 类长成什么样，format 的定义在 `{ISA}/format` 下，底下打开一看，很多 cpp 形式的文本，等待着做替换。与之相关的还有模板的概念，后续会提到。
 
 官网上说 decoder 代码可以和 format 代码任意嵌套，但是我感觉应当是到叶子节点为止，只能出现一个 format，不然感觉会冲突。
 
-`{{ Rc = Ra + Rb; }}` 像这种每括号括起来的一块，都是后面传递给 format 的参数。
+` Rc = Ra + Rb; ` 像这种每括号括起来的一块，都是后面传递给 format 的参数。
 
 ### 默认块
 
@@ -55,23 +39,11 @@ decoder 解释到最后无非就是把 decoder.isa 中的定义转换成 cpp 中
 
 ### template 格式
 
-```python
-def template BasicDecode {{
-    return new %(class_name)s(machInst);
-}};
-```
-
 上面是模板的典型格式，代表的就是即将生成的 cpp 代码段。模板中的 `%(?)s` 这样的参数都会被 format 生成的字典替换掉。
 
 .isa 文件中定义的模板会被 `isa_parser.py` 解析，在解析过程中表现成一个 `template` 对象，这个对象的类是在 python 中定义的。最终被替换的文本生成实际上就是调用 template 类的 subst 方法，完成对模板也就是最后 cpp 类的生成。
 
 ### Output 格式
-
-```python
-output <destination> {{
-    [code omitted]
-}};
-```
 
 在 .isa 文件中定义的 output 块中间填写的代码为 cpp 代码，注意这些 cpp 代码会被原封不动的复制到最后生成的 cpp 文件中。destination 指定这部分代码复制到哪里，可以是  header, decoder, or exec 这三者之一，指定这段代码输出到的位置，分别为头文件、类定义、核心执行函数其中之一。
 
@@ -99,79 +71,9 @@ let 块中完全就是 python 代码，所有 let 块中的上下文是共享的
 
 ### 操作数修饰符号
 
-```python
-def operand_types {{
-    'sb' : 'int8_t',
-    'ub' : 'uint8_t',
-    'sw' : 'int16_t',
-    'uw' : 'uint16_t',
-    'sl' : 'int32_t',
-    'ul' : 'uint32_t',
-    'sq' : 'int64_t',
-    'uq' : 'uint64_t',
-    'sf' : 'float',
-    'df' : 'double'
-}};
-```
-
 类似于这样，有了这样的定义计算的表达 `Rc.sl = Ra.sl + Rb.sl;` 就能这样。操作数修饰符号每个体系结构有自己的定义。
 
 ### 指令操作数
-
-```python
-
-def operands {{
-#General Purpose Integer Reg Operands
-    'Rd': IntReg('ud', 'RD', 'IsInteger', 1),
-    'Rs1': IntReg('ud', 'RS1', 'IsInteger', 2),
-    'Rs2': IntReg('ud', 'RS2', 'IsInteger', 3),
-    'Rt': IntReg('ud', 'AMOTempReg', 'IsInteger', 4),
-    'Rc1': IntReg('ud', 'RC1', 'IsInteger', 2),
-    'Rc2': IntReg('ud', 'RC2', 'IsInteger', 3),
-    'Rp1': IntReg('ud', 'RP1 + 8', 'IsInteger', 2),
-    'Rp2': IntReg('ud', 'RP2 + 8', 'IsInteger', 3),
-    'ra': IntReg('ud', 'ReturnAddrReg', 'IsInteger', 1),
-    'sp': IntReg('ud', 'StackPointerReg', 'IsInteger', 2),
-
-    'a0': IntReg('ud', '10', 'IsInteger', 1),
-
-    'Fd': FloatRegOp('df', 'FD', 'IsFloating', 1),
-    'Fd_bits': FloatRegOp('ud', 'FD', 'IsFloating', 1),
-    'Fs1': FloatRegOp('df', 'FS1', 'IsFloating', 2),
-    'Fs1_bits': FloatRegOp('ud', 'FS1', 'IsFloating', 2),
-    'Fs2': FloatRegOp('df', 'FS2', 'IsFloating', 3),
-    'Fs2_bits': FloatRegOp('ud', 'FS2', 'IsFloating', 3),
-    'Fs3': FloatRegOp('df', 'FS3', 'IsFloating', 4),
-    'Fs3_bits': FloatRegOp('ud', 'FS3', 'IsFloating', 4),
-    'Fc1': FloatRegOp('df', 'FC1', 'IsFloating', 1),
-    'Fc1_bits': FloatRegOp('ud', 'FC1', 'IsFloating', 1),
-    'Fc2': FloatRegOp('df', 'FC2', 'IsFloatReg', 2),
-    'Fc2_bits': FloatRegOp('ud', 'FC2', 'IsFloating', 2),
-    'Fp2': FloatRegOp('df', 'FP2 + 8', 'IsFloating', 2),
-    'Fp2_bits': FloatRegOp('ud', 'FP2 + 8', 'IsFloating', 2),
-
-
-    'Fx': IntReg('df', 'FMATempReg', 'IsFloating', 1),
-    'Fx_bits': IntReg('ud', 'FMATempReg', 'IsFloating', 1),
-
-    'Vd':  VecRegOp('vc', 'VD', 'IsVector', 1),
-    'Vs1': VecRegOp('vc', 'VS1', 'IsVector', 2),
-    'Vs2': VecRegOp('vc', 'VS2', 'IsVector', 3),
-    'Vs3': VecRegOp('vc', 'VS3', 'IsVector', 4),
-    'Vfof': VecRegOp('vc', 'VecFofTempReg', 'IsVector', 5),
-
-    'rVl' : RMiscRegOp('ud', 'VecRenamedVLReg', None, 10),
-
-
-#Memory Operand
-    'Mem': MemOp('ud', None, (None, 'IsLoad', 'IsStore'), 5),
-
-#Program Counter Operands
-    'PC': PCStateOp('ud', 'pc', (None, None, 'IsControl'), 7),
-    'NPC': PCStateOp('ud', 'npc', (None, None, 'IsControl'), 8),
-}};
-
-```
 
 类似于这样的定义，需要重点关注的是 'IntReg' 指的是类型,以`'Rd': IntReg('ud', 'RD', 'IsInteger', 1),`为例，ud 指定操作数的类型，RD 指定在 decoder.isa 中用的时候的标记，IsInteger 指用了这条指令就会在 staticInst 中加上这个标记。IsInteger 这个部分可能会包含一个三元组(a, b, c)，只要使用就会被标记上 a，如果是源操作数会被标记上 b，如果是目的操作数会被标记上 a。
 
