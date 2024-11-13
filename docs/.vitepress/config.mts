@@ -74,6 +74,13 @@ export default defineConfig({
               { text: 'simpoint', link: '/notes/paper-reading/perf-analy/simpoint' },
             ]
           },
+          { //level2
+            text: 'cache & memory',
+            collapsed: true,
+            items: [
+              { text: 'cache coherence & barrier & memory model', link: '/notes/paper-reading/cache_mem/mb_paul' },
+            ]
+          },
         ]
       },
 
