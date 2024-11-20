@@ -81,6 +81,13 @@ export default defineConfig({
               { text: 'cache coherence & barrier & memory model', link: '/notes/paper-reading/cache_mem/mb_paul' },
             ]
           },
+          { //level2
+            text: 'prefetch',
+            collapsed: true,
+            items: [
+              { text: 'Spatial Memory Streaming', link: '/notes/paper-reading/prefetch/sms' },
+            ]
+          },
         ]
       },
 
