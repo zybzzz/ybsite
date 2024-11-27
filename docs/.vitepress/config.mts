@@ -86,6 +86,7 @@ export default defineConfig({
             collapsed: true,
             items: [
               { text: 'Spatial Memory Streaming', link: '/notes/paper-reading/prefetch/sms' },
+              { text: 'stream/stride', link: '/notes/paper-reading/prefetch/stride_stream' },
             ]
           },
         ]
