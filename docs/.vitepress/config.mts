@@ -330,6 +330,7 @@ export default defineConfig({
               { text: 'gem5 stats', link: '/notes/sim/gem5/stats' },
               { text: 'gem5 reg arch', link: '/notes/sim/gem5/reg_arch' },
               { text: 'gem5 isa dsl', link: '/notes/sim/gem5/isa_dsl' },
+              { text: 'gem5 interrupt handle', link: '/notes/sim/gem5/gem5_interrupt_handle' },
             ]
           },
 
