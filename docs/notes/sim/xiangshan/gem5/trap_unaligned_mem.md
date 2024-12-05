@@ -493,7 +493,7 @@ Commit::squashAll(ThreadID tid)
 
 ## riscv-pk
 
-(生成的检查点应该托管在pk上)
+(这部分作废，检查点不在 pk 上，跑在真正的 linux kernel 上)
 
 通过观察之前产生 fault 时候使用的中断向量号，可以发现非对齐内存访问的中断号为 4，到 riscv-pk 中去找，发现在 machine/mentry.S 中：
 
@@ -602,3 +602,9 @@ void misaligned_load_trap(uintptr_t* regs, uintptr_t mcause, uintptr_t mepc)
 可以看到上面函数中的 for 循环就是把一个非对齐的 load 拆成多个 load 进行对齐的访问，这时候应该能够感觉到，原先的非对齐的 load 访问在这个中断处理函数执行完成之后就完成了，数值也被写回寄存器了。更为关键的是这个函数的最后还利用传入的地址计算出了返回地址，其实就是当前指令的下一条指令，并写回到 mepc 这个 csr中，即 `write_csr(mepc, npc);`，等最后调用 mret 的时候就返回了。整个处理过程就这么完成了。
 
 注意上面的中断处理函数都是在 gem5 中执行的。
+
+## commit 阶段清空处理顺序
+
+1. 考虑 iew 阶段传来的清空。
+2. 指令提交，指令本身触发的清空。
+3. 所有指令都提交完了，异常触发的清空。
