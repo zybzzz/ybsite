@@ -2,6 +2,11 @@
 
 访存相关主要包括 LSQ 和 LSQ Unit，LSQ 基本在委托 LSQ Unit。目前 riscv 中还是没有硬件事务内存的支持的，暂时不考虑硬件事务内存相关的。
 
+## 常见的一些重新发送内存请求的函数
+
+1. retrydefer: 重试TLB缺失的
+2. retrycancel：重试各种被取消的
+
 ## 初始化
 
 lsq 和 lsq_unit 的初始化都很简单，基本都是简单的根据 python 脚本的参数赋值进行初始化。
@@ -325,6 +330,7 @@ LSQUnit::executeLoad(const DynInstPtr &inst)
         // is a strictly ordered load that needs to hit the head of
         // commit.
         // 直接前递寄存器
+        // 这个情况在 risc-v 下应该不出现
         if (!inst->readPredicate())
             inst->forwardOldRegs();
         DPRINTF(LSQUnit, "Load [sn:%lli] not executed from %s\n", inst->seqNum,
@@ -366,7 +372,7 @@ LSQ::pushRequest(const DynInstPtr& inst, bool isLoad, uint8_t *data,
     // This comming request can be either load, store or atomic.
     // Atomic request has a corresponding pointer to its atomic memory
     // operation
-    // todo: 解释含义
+    // store 加含有 amo op 的就是原子指令
     [[maybe_unused]] bool isAtomic = !isLoad && amo_op;
 
     // 拿到线程 id
@@ -384,6 +390,7 @@ LSQ::pushRequest(const DynInstPtr& inst, bool isLoad, uint8_t *data,
     // For ISAs such as x86 that supports cross-cache-line atomic instructions,
     // the cache needs to be modified to perform atomic update to both cache
     // lines. For now, such cross-line update is not supported.
+    // 原子指令不能跨页
     assert(!isAtomic || (isAtomic && !needs_burst));
 
     // 检查这些包属于哪种类型的内存包
@@ -409,6 +416,7 @@ LSQ::pushRequest(const DynInstPtr& inst, bool isLoad, uint8_t *data,
                                             std::move(amo_op));
         }
         assert(request);
+        // byteenable 就是类似的谓词机制
         request->_byteEnable = byte_enable;
         // 设置当前 inst 已经产生了一个 request 包
         inst->setRequest();
@@ -456,6 +464,7 @@ LSQ::pushRequest(const DynInstPtr& inst, bool isLoad, uint8_t *data,
                 inst->getFault() = fault;
         } else if (isLoad) {
             // 不需要内存访问的设置相关的标记
+            // 注意这里跟那个 readpredicate 不是一个东西
             inst->setMemAccPredicate(false);
             // Commit will have to clean up whatever happened.  Set this
             // instruction as executed.
@@ -520,6 +529,8 @@ LSQUnit::read(LSQRequest *request, ssize_t load_idx)
     // A bit of a hackish way to get strictly ordered accesses to work
     // only if they're at the head of the LSQ and are ready to commit
     // (at the head of the ROB too).
+    // 这里是 mmio 的情况
+    // mmio 一定是序严格的，在执行的时候其一定已经位于队列的头部
     // 一定要保证严格顺序的访问 这个顺序无法恢复 说明序没有维护好
     if (request->mainReq()->isStrictlyOrdered() && (load_idx != loadQueue.head() || !load_inst->isAtCommit())) {
         // should not enter this
@@ -552,6 +563,7 @@ LSQUnit::read(LSQRequest *request, ssize_t load_idx)
     }
 
     // 像是记录了地址 为 LL SC 提供了某种支持
+    // RISC-V 下没有特别的操作
     if (request->mainReq()->isLLSC()) {
         // Disable recording the result temporarily.  Writing to misc
         // regs normally updates the result, but this is not the
@@ -578,6 +590,7 @@ LSQUnit::read(LSQRequest *request, ssize_t load_idx)
         return NoFault;
     }
 
+    // 下面是检查 store 到 load 的前递
     // Check the SQ for any previous stores that might lead to forwarding
     auto store_it = load_inst->sqIt;
     assert(store_it >= storeWBIt);
@@ -833,7 +846,7 @@ LSQUnit::executeStore(const DynInstPtr &store_inst)
     if (store_inst->isTranslationDelayed() && store_fault == NoFault)
         return store_fault;
 
-
+    // 基本不会出现这种情况
     if (!store_inst->readPredicate()) {
         DPRINTF(LSQUnit, "Store [sn:%lli] not executed from predication\n", store_inst->seqNum);
         store_inst->forwardOldRegs();
@@ -841,6 +854,7 @@ LSQUnit::executeStore(const DynInstPtr &store_inst)
     }
 
     // 压根就不用 store 的情况
+    // 咱不明确
     if (storeQueue[store_idx].size() == 0) {
         DPRINTF(LSQUnit, "Fault on Store PC %s, [sn:%lli], Size = 0\n", store_inst->pcState(), store_inst->seqNum);
 
@@ -1102,5 +1116,7 @@ InstructionQueue::scheduleNonSpec(const InstSeqNum &inst)
 ```
 
 这部分简单的来讲就是把指令塞到调度队列里面开始调度。
+
+## 访存单元太复杂，感觉还有点不清楚
 
 
