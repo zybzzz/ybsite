@@ -195,6 +195,13 @@ export default defineConfig({
                     { text: 'kernel build process', link: '/notes/os-dev-use/kernel/build-process/build' },
                     { text: 'kernel init -- asm', link: '/notes/os-dev-use/kernel/init/initasm' },
                 ]
+              },
+              { //level3
+                text: 'memory manage',
+                collapsed: true,
+                items: [
+                    { text: 'mmap', link: '/notes/os-dev-use/kernel/mm/mmap' },
+                ]
               }
             ]
           }
