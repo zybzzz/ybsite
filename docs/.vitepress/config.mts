@@ -338,6 +338,8 @@ export default defineConfig({
               { text: 'gem5 reg arch', link: '/notes/sim/gem5/reg_arch' },
               { text: 'gem5 isa dsl', link: '/notes/sim/gem5/isa_dsl' },
               { text: 'gem5 interrupt handle', link: '/notes/sim/gem5/gem5_interrupt_handle' },
+              { text: 'gem5 riscv macro/micro inst', link: '/notes/sim/gem5/microandmacroinst' },
+              { text: 'gem5 riscv decoder', link: '/notes/sim/gem5/riscvdecoder' },
             ]
           },
 
@@ -453,6 +455,7 @@ export default defineConfig({
                   { text: 'reg_class.hh', link: '/notes/sim/gem5src/cpu/reg_class_hh' },
                   { text: 'timebuf.hh', link: '/notes/sim/gem5src/cpu/timebuf_hh' },
                   { text: 'activity.hh', link: '/notes/sim/gem5src/cpu/activity' },
+                  { text: 'decode_cache.hh', link: '/notes/sim/gem5src/cpu/decode_cache' },
                 ]
               },
 
