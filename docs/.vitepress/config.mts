@@ -75,6 +75,13 @@ export default defineConfig({
             ]
           },
           { //level2
+            text: 'front-end',
+            collapsed: true,
+            items: [
+              { text: 'decoupled front-end', link: '/notes/paper-reading/frontend/decoupled_frontend' },
+            ]
+          },
+          { //level2
             text: 'cache & memory',
             collapsed: true,
             items: [
