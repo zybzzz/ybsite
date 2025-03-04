@@ -204,6 +204,13 @@ export default defineConfig({
                 ]
               },
               { //level3
+                text: 'syscall',
+                collapsed: true,
+                items: [
+                    { text: 'syscall define', link: '/notes/os-dev-use/kernel/syscall/syscall_define' },
+                ]
+              },
+              { //level3
                 text: 'memory manage',
                 collapsed: true,
                 items: [
