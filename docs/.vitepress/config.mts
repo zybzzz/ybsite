@@ -218,6 +218,13 @@ export default defineConfig({
                 items: [
                     { text: 'mmap', link: '/notes/os-dev-use/kernel/mm/mmap' },
                 ]
+              },
+              { //level3
+                text: 'process schedule',
+                collapsed: true,
+                items: [
+                    { text: 'schedule', link: '/notes/os-dev-use/kernel/process/schedule' },
+                ]
               }
             ]
           }
