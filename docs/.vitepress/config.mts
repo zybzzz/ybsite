@@ -209,6 +209,7 @@ export default defineConfig({
                 items: [
                     { text: 'syscall define', link: '/notes/os-dev-use/kernel/syscall/syscall_define' },
                     { text: 'memory syscall', link: '/notes/os-dev-use/kernel/syscall/memory' },
+                    { text: 'entry to kernel', link: '/notes/os-dev-use/kernel/syscall/entry' },
                 ]
               },
               { //level3
