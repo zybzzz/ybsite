@@ -400,6 +400,7 @@ export default defineConfig({
                   { text: 'Load Store Unit', link: '/notes/sim/xiangshan/gem5/lsq' },
                   { text: 'o3 memrequest', link: '/notes/sim/xiangshan/gem5/mem_request' },
                   { text: 'gem5 data proc', link: '/notes/sim/xiangshan/gem5/dataproc' },
+                  { text: 'cache level', link: '/notes/sim/xiangshan/gem5/cache' },
                 ]
               },
             ]
