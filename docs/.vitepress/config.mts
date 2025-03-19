@@ -402,6 +402,7 @@ export default defineConfig({
                   { text: 'gem5 data proc', link: '/notes/sim/xiangshan/gem5/dataproc' },
                   { text: 'cache level', link: '/notes/sim/xiangshan/gem5/cache' },
                   { text: 'decoupled ftb', link: '/notes/sim/xiangshan/gem5/decoupledftb' },
+                  { text: 'vector', link: '/notes/sim/xiangshan/gem5/vector' },
                 ]
               },
             ]
