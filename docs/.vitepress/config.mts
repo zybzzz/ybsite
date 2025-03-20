@@ -79,6 +79,7 @@ export default defineConfig({
             collapsed: true,
             items: [
               { text: 'decoupled front-end', link: '/notes/paper-reading/frontend/decoupled_frontend' },
+              { text: 'return address stack', link: '/notes/paper-reading/frontend/ras' },
             ]
           },
           { //level2
