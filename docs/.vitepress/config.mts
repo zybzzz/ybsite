@@ -151,6 +151,13 @@ export default defineConfig({
             ]
           },
           { //level2
+            text: 'x86',
+            collapsed: true,
+            items: [
+              { text: 'intel family cache & mem order', link: '/notes/arch/x86/candmorder' },
+            ]
+          },
+          { //level2
             text: 'snippets',
             collapsed: true,
             items: [
