@@ -1117,6 +1117,10 @@ InstructionQueue::scheduleNonSpec(const InstSeqNum &inst)
 
 这部分简单的来讲就是把指令塞到调度队列里面开始调度。
 
+## store buffer
+
+store buffer 会给 load 提供 store-load forward 的 value，貌似是通过虚拟地址和物理地址都能进行前递。但是看到实现中还是在过了 mmu/tlb 之后才根据虚拟地址进行前递。为什么还是要过个 mmu/tlb 翻译过程呢，个人感觉可能是访问的虚拟内存地址可能代表i/o等其他特殊的地址，导致不经过翻译无法确定这部分的属性，所以还是在过了 mmu 之后再进行 forward 的相关处理。
+
 ## 访存单元太复杂，感觉还有点不清楚
 
 
