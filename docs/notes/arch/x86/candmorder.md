@@ -55,3 +55,20 @@ In a multiple-processor system, the following ordering principles apply:
 ![serial inst](./images/candmorder/serialinst.png)
 
 上面还指出了很多序列化的指令，包括显式的屏障和隐式的 cpuid 导致的序列化。
+
+## 编译器屏障
+
+在系统开发使用内联汇编插入一条屏障的时候，往往还要使用内联汇编的特性插入编译器的屏障：
+
+```c
+#define barrier() asm volatile("" ::: "memory")
+```
+
+```c
+data = 42;
+barrier();         // 编译器屏障
+asm volatile("fence rw, w" ::: "memory");  // CPU 屏障
+flag = 1;
+```
+
+如果只加 cpu 屏障，虽然在硬件层面上保证了序，但是如果不辅助以编译器的优化，从软件层面上可能 `flag = 1;` 这行就已经被编译器编译到内联汇编的屏障前面去了，因此从编译器生成代码的层面上，这行也必须移到屏障指令的后面，这就是编译器屏障的作用。
