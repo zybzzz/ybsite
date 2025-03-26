@@ -189,6 +189,7 @@ export default defineConfig({
                 { text: 'git', link: '/notes/os-dev-use/linux-use/git' },
                 { text: 'Disks, partitions, file systems', link: '/notes/os-dev-use/linux-use/disk_fs' },
                 { text: 'X11 & tty', link: '/notes/os-dev-use/linux-use/x11' },
+                { text: 'buildroot', link: '/notes/os-dev-use/linux-use/buildroot' },
             ]
           },
           { //level2
