@@ -190,6 +190,7 @@ export default defineConfig({
                 { text: 'Disks, partitions, file systems', link: '/notes/os-dev-use/linux-use/disk_fs' },
                 { text: 'X11 & tty', link: '/notes/os-dev-use/linux-use/x11' },
                 { text: 'buildroot', link: '/notes/os-dev-use/linux-use/buildroot' },
+                { text: 'gnu as', link: '/notes/os-dev-use/linux-use/gnuas' },
             ]
           },
           { //level2
