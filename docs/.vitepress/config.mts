@@ -191,6 +191,7 @@ export default defineConfig({
                 { text: 'X11 & tty', link: '/notes/os-dev-use/linux-use/x11' },
                 { text: 'buildroot', link: '/notes/os-dev-use/linux-use/buildroot' },
                 { text: 'gnu as', link: '/notes/os-dev-use/linux-use/gnuas' },
+                { text: 'diff', link: '/notes/os-dev-use/linux-use/diff' },
             ]
           },
           { //level2
