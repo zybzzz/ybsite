@@ -385,6 +385,7 @@ export default defineConfig({
               { text: 'qemu options', link: '/notes/sim/qemu/usageandoption' },
               { text: 'First glimpse of qemu', link: '/notes/sim/qemu/fgqemu' },
               { text: 'qemu object model', link: '/notes/sim/qemu/qom' },
+              { text: 'dir tree', link: '/notes/sim/qemu/dirtree' },
             ]
           },
 
