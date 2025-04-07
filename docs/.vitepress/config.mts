@@ -148,6 +148,7 @@ export default defineConfig({
             collapsed: true,
             items: [
               { text: 'sbi & opensbi', link: '/notes/arch/risc-v/sbi' },
+              { text: 'memory order', link: '/notes/arch/risc-v/morder' },
             ]
           },
           { //level2
@@ -386,6 +387,7 @@ export default defineConfig({
               { text: 'First glimpse of qemu', link: '/notes/sim/qemu/fgqemu' },
               { text: 'qemu object model', link: '/notes/sim/qemu/qom' },
               { text: 'dir tree', link: '/notes/sim/qemu/dirtree' },
+              { text: 'vcpu thread create', link: '/notes/sim/qemu/vcputhread' },
             ]
           },
 
