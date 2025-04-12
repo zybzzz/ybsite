@@ -101,6 +101,27 @@ export default defineConfig({
       },
 
       {
+        text: 'ai system',
+        collapsed: false,
+        items: [
+          { //level2
+            text: 'inference & lib',
+            collapsed: true,
+            items: [
+              { //level2
+                text: 'llama.cpp & ggml',
+                collapsed: true,
+                items: [
+                  { text: 'first look of ggml', link: '/notes/aisys/infralib/ggml/flggml' },
+                ]
+              },
+            ]
+          },
+          
+        ]
+      },
+
+      {
         text: 'Computer Architecture',
         collapsed: false,
         items: [
