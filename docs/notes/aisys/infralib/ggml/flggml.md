@@ -291,9 +291,9 @@ size_t ggml_quantize_chunk(
         enum ggml_type   type,
            const float * src,
                   void * dst,
-               int64_t   start,
-               int64_t   nrows,
-               int64_t   n_per_row,
+               int64_t   start,//这是对于 FP32 来说的 start
+               int64_t   nrows,// 这是根据 FP32 来说的 nrow
+               int64_t   n_per_row, // 这是根据 FP32 来说的 row size
            const float * imatrix) {
     const int64_t n = (int64_t) nrows * n_per_row;
 
@@ -370,3 +370,7 @@ size_t ggml_quantize_chunk(
 }
 
 ```
+
+## 张量内存管理
+
+张量的内存都管理在 backend buffer 中，理论上来说应该是后端在做管理的，ggml 也有他自己的默认管理实现，在 no_alloc = false 的时候，内存直接由 ggml 在创建张量时候进行分配，这里的内存布局就要参考 ggml 的实现了。但是 ggml 在分块的实现往往是把块和权重一起进行保存，这给遍历访问带来了不方便，所以后端应该是有办法自己管 buffer 的。具体可以看 amx 上的实现。
