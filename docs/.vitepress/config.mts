@@ -113,6 +113,7 @@ export default defineConfig({
                 collapsed: true,
                 items: [
                   { text: 'first look of ggml', link: '/notes/aisys/infralib/ggml/flggml' },
+                  { text: 'backend of ggml', link: '/notes/aisys/infralib/ggml/ggml_backend' },
                 ]
               },
             ]
