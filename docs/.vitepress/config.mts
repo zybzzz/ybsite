@@ -172,6 +172,7 @@ export default defineConfig({
             items: [
               { text: 'sbi & opensbi', link: '/notes/arch/risc-v/sbi' },
               { text: 'memory order', link: '/notes/arch/risc-v/morder' },
+              { text: 'xuantie m ext', link: '/notes/arch/risc-v/xuantie-m' },
             ]
           },
           { //level2
