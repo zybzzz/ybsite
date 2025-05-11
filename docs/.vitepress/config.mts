@@ -180,6 +180,7 @@ export default defineConfig({
             collapsed: true,
             items: [
               { text: 'intel family cache & mem order', link: '/notes/arch/x86/candmorder' },
+              { text: 'optimize', link: '/notes/arch/x86/optimize' },
             ]
           },
           { //level2
