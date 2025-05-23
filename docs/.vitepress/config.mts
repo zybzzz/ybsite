@@ -588,6 +588,15 @@ export default defineConfig({
               { text: 'Syntax-Direted Translation Handout', link: '/notes/compiler/dragonbook/Syntax-Direted_Translation_Handout' },
             ]
           },
+
+          {
+            text: 'llvm',
+            collapsed: true,
+            link: '/notes/compiler/llvm/',
+            items: [
+              { text: 'llvm arch', link: '/notes/compiler/dragonbook/compile' },
+            ]
+          },
         ]
       },
 
