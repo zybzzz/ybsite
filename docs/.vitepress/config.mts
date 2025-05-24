@@ -200,6 +200,17 @@ export default defineConfig({
       },
 
       {
+        text: 'GPU Architecture',
+        collapsed: false,
+        items: [
+          { //level2
+            text: 'GPGPU Arch',
+            link: 'notes/gpuarch/normalarch.md',
+          },
+        ]
+      },
+
+      {
         text: 'OS Development and Usage',
         collapsed: false,
         items: [
