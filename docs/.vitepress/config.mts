@@ -119,6 +119,13 @@ export default defineConfig({
               },
             ]
           },
+          { //level2
+            text: 'MLIR',
+            collapsed: true,
+            items: [
+              { text: 'first look of MLIR', link: '/notes/aisys/mlir/flmlir' },
+            ]
+          },
           
         ]
       },
