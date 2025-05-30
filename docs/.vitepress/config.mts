@@ -124,6 +124,7 @@ export default defineConfig({
             collapsed: true,
             items: [
               { text: 'first look of MLIR', link: '/notes/aisys/mlir/flmlir' },
+              { text: 'Basic Logic', link: '/notes/aisys/mlir/basiclogic' },
             ]
           },
           
