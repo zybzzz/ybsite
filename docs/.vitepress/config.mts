@@ -126,6 +126,7 @@ export default defineConfig({
               { text: 'first look of MLIR', link: '/notes/aisys/mlir/flmlir' },
               { text: 'Basic Logic', link: '/notes/aisys/mlir/basiclogic' },
               { text: 'LLVM Tools', link: '/notes/aisys/mlir/llvmtools' },
+              { text: 'mlir-opt', link: '/notes/aisys/mlir/mliroptdetail' },
             ]
           },
           
