@@ -129,6 +129,13 @@ export default defineConfig({
               { text: 'mlir-opt', link: '/notes/aisys/mlir/mliroptdetail' },
             ]
           },
+          { //level2
+            text: 'triton',
+            collapsed: true,
+            items: [
+              { text: 'project arch', link: '/notes/aisys/triton/projarch' },
+            ]
+          },
           
         ]
       },
