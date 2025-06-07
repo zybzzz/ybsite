@@ -261,11 +261,12 @@ export default defineConfig({
             link: '/notes/os-dev-use/kernel/index',
             items: [
               { //level3
-                text: 'build process',
+                text: 'build process and boot',
                 collapsed: true,
                 items: [
                     { text: 'kernel build process', link: '/notes/os-dev-use/kernel/build-process/build' },
                     { text: 'kernel init -- asm', link: '/notes/os-dev-use/kernel/init/initasm' },
+                    { text: 'boot', link: '/notes/os-dev-use/kernel/init/bootagain' },
                 ]
               },
               { //level3
