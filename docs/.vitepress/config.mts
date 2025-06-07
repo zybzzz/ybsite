@@ -623,6 +623,7 @@ export default defineConfig({
             link: '/notes/compiler/llvm/',
             items: [
               { text: 'llvm arch', link: '/notes/compiler/dragonbook/compile' },
+              { text: 'machine scheduler', link: '/notes/compiler/dragonbook/machinesche' },
             ]
           },
         ]
