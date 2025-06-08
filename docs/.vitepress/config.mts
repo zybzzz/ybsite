@@ -267,6 +267,7 @@ export default defineConfig({
                     { text: 'kernel build process', link: '/notes/os-dev-use/kernel/build-process/build' },
                     { text: 'kernel init -- asm', link: '/notes/os-dev-use/kernel/init/initasm' },
                     { text: 'boot', link: '/notes/os-dev-use/kernel/init/bootagain' },
+                    { text: 'per cpu var vs thread local', link: '/notes/os-dev-use/kernel/init/percpuvar' },
                 ]
               },
               { //level3
