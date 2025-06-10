@@ -272,6 +272,13 @@ export default defineConfig({
                 ]
               },
               { //level3
+                text: 'irq',
+                collapsed: true,
+                items: [
+                    { text: 'irqs', link: '/notes/os-dev-use/kernel/irq/irqs' },
+                ]
+              },
+              { //level3
                 text: 'syscall',
                 collapsed: true,
                 items: [
