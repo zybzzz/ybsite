@@ -276,6 +276,7 @@ export default defineConfig({
                 collapsed: true,
                 items: [
                     { text: 'irqs', link: '/notes/os-dev-use/kernel/irq/irqs' },
+                    { text: 'vsyscall', link: '/notes/os-dev-use/kernel/irq/vsyscall' },
                 ]
               },
               { //level3
