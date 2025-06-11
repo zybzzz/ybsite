@@ -634,8 +634,9 @@ export default defineConfig({
             collapsed: true,
             link: '/notes/compiler/llvm/',
             items: [
-              { text: 'llvm arch', link: '/notes/compiler/dragonbook/compile' },
-              { text: 'machine scheduler', link: '/notes/compiler/dragonbook/machinesche' },
+              { text: 'llvm arch', link: '/notes/compiler/llvm/compile' },
+              { text: 'machine scheduler', link: '/notes/compiler/llvm/machinesche' },
+              { text: 'instruction selection', link: '/notes/compiler/llvm/isel' },
             ]
           },
         ]
