@@ -637,6 +637,7 @@ export default defineConfig({
               { text: 'llvm arch', link: '/notes/compiler/llvm/compile' },
               { text: 'machine scheduler', link: '/notes/compiler/llvm/machinesche' },
               { text: 'instruction selection', link: '/notes/compiler/llvm/isel' },
+              { text: 'selectionDAG', link: '/notes/compiler/llvm/selectiondag' },
             ]
           },
         ]
