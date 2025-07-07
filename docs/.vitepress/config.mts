@@ -643,6 +643,20 @@ export default defineConfig({
         ]
       },
 
+      {
+        text: 'Algorithm',
+        collapsed: false,
+        items: [
+          {
+            text: 'thinking',
+            collapsed: true,
+            items: [
+              { text: '贪心', link: '/notes/algorithm/thinking/greedy' },
+            ]
+          },
+        ]
+      },
+
 
 
       {
