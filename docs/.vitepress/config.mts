@@ -374,6 +374,7 @@ export default defineConfig({
                 collapsed: true,
                 items: [
                   { text: 'first look at template', link: '/notes/langlearn/cpp/snippets/first_look_template' },
+                  { text: 'something I dont know', link: '/notes/langlearn/cpp/snippets/forget' },
                 ]
               },
             ]
