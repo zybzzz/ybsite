@@ -655,6 +655,7 @@ export default defineConfig({
             items: [
               { text: '贪心', link: '/notes/algorithm/thinking/greedy' },
               { text: '单调队列/栈与声明周期', link: '/notes/algorithm/thinking/monotonicqueue' },
+              { text: '树状数组', link: '/notes/algorithm/thinking/treeindexedarray' },
             ]
           },
         ]
