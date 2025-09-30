@@ -97,6 +97,13 @@ export default defineConfig({
               { text: 'stream/stride', link: '/notes/paper-reading/prefetch/stride_stream' },
             ]
           },
+          { //level2
+            text: 'indirect prefetch',
+            collapsed: true,
+            items: [
+              { text: 'IMP: Indirect Memory Prefetcher', link: '/notes/paper-reading/idprefetch/imp' },
+            ]
+          },
         ]
       },
 
