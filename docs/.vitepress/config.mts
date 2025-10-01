@@ -102,6 +102,7 @@ export default defineConfig({
             collapsed: true,
             items: [
               { text: 'IMP: Indirect Memory Prefetcher', link: '/notes/paper-reading/idprefetch/imp' },
+              { text: 'CDP', link: '/notes/paper-reading/idprefetch/cdp' },
             ]
           },
         ]
@@ -143,7 +144,7 @@ export default defineConfig({
               { text: 'project arch', link: '/notes/aisys/triton/projarch' },
             ]
           },
-          
+
         ]
       },
 
