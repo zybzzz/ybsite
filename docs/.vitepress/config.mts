@@ -96,6 +96,7 @@ export default defineConfig({
               { text: 'Spatial Memory Streaming', link: '/notes/paper-reading/prefetch/sms' },
               { text: 'stream/stride', link: '/notes/paper-reading/prefetch/stride_stream' },
               { text: 'SPP', link: '/notes/paper-reading/prefetch/spp' },
+              { text: 'BOP', link: '/notes/paper-reading/prefetch/bop' },
             ]
           },
           { //level2
