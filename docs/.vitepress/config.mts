@@ -98,6 +98,7 @@ export default defineConfig({
               { text: 'SPP', link: '/notes/paper-reading/prefetch/spp' },
               { text: 'BOP', link: '/notes/paper-reading/prefetch/bop' },
               { text: 'Berti', link: '/notes/paper-reading/prefetch/berti' },
+              { text: 'Register File Prefetch', link: '/notes/paper-reading/prefetch/rfp' },
             ]
           },
           { //level2
