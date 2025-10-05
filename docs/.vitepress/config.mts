@@ -114,6 +114,7 @@ export default defineConfig({
             collapsed: true,
             items: [
               { text: 'CRISP: Critical Slice Prefetching', link: '/notes/paper-reading/cp/CRISP' },
+              { text: 'hermes', link: '/notes/paper-reading/cp/hermes' },
             ]
           },
         ]
