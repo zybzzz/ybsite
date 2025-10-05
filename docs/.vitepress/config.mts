@@ -109,6 +109,13 @@ export default defineConfig({
               { text: 'CDP', link: '/notes/paper-reading/idprefetch/cdp' },
             ]
           },
+          { //level2
+            text: 'critical path',
+            collapsed: true,
+            items: [
+              { text: 'CRISP: Critical Slice Prefetching', link: '/notes/paper-reading/cp/CRISP' },
+            ]
+          },
         ]
       },
 
