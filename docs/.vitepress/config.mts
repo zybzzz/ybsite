@@ -267,6 +267,7 @@ export default defineConfig({
                 { text: 'buildroot', link: '/notes/os-dev-use/linux-use/buildroot' },
                 { text: 'gnu as', link: '/notes/os-dev-use/linux-use/gnuas' },
                 { text: 'diff', link: '/notes/os-dev-use/linux-use/diff' },
+                { text: 'coro', link: '/notes/os-dev-use/linux-use/coro' },
             ]
           },
           { //level2
