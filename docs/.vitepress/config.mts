@@ -681,6 +681,7 @@ export default defineConfig({
               { text: '树状数组', link: '/notes/algorithm/thinking/treeindexedarray' },
               { text: '二分图', link: '/notes/algorithm/thinking/bipartgraph' },
               { text: '二分答案', link: '/notes/algorithm/thinking/binres' },
+              { text: '同时搜两棵树', link: '/notes/algorithm/thinking/twotree' },
             ]
           },
         ]
