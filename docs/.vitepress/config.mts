@@ -680,6 +680,7 @@ export default defineConfig({
               { text: '单调队列/栈与声明周期', link: '/notes/algorithm/thinking/monotonicqueue' },
               { text: '树状数组', link: '/notes/algorithm/thinking/treeindexedarray' },
               { text: '二分图', link: '/notes/algorithm/thinking/bipartgraph' },
+              { text: '二分答案', link: '/notes/algorithm/thinking/binres' },
             ]
           },
         ]
