@@ -12,7 +12,7 @@
 
 ## io uring 的几种方式
 
-![uring](./images/uring.md)
+![uring](./images/uring.png)
 
 1. default: 通过 enter 提供系统调用，提交之后可以继续干别的事。等到 io 完成的时候，内核通知CQ。等到用户程序想用的时候，自己也可以enter，有了就拿走，没有继续等。
 2. polling: 文章中称 ioup 的方式，enter 提交请求，提交完后等待一个完成的请求，拿到一个完成的请求出内核。看起来像是一种同步的方式，适用于低延迟的场合，因为一次调用既提交也拿。
@@ -23,6 +23,8 @@
 ioup 虽然看起来同步和 read 一样，但是实际上他有好处。read 往往会触发系统调度，调度与切换产生延迟，但是 ioup，ioup 一直等，直到完成为止。另一个是，ioup 可以以 batch 的方式提交请求，而 read 不行。
 
 ## 性能分析
+
+![perf ana](./images/perfana.png)
 
 只分析了大量读的情况。
 
