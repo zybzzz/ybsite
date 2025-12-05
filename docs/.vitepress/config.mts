@@ -325,6 +325,13 @@ export default defineConfig({
                 items: [
                     { text: 'schedule', link: '/notes/os-dev-use/kernel/process/schedule' },
                 ]
+              },
+              { //level3
+                text: 'io stack',
+                collapsed: true,
+                items: [
+                    { text: 'modern io api(systor 22)', link: '/notes/os-dev-use/kernel/io/ioapi.md' },
+                ]
               }
             ]
           }
