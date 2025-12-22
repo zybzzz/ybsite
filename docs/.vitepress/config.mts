@@ -324,6 +324,7 @@ export default defineConfig({
                 collapsed: true,
                 items: [
                     { text: 'schedule', link: '/notes/os-dev-use/kernel/process/schedule' },
+                    { text: 'process and schedule', link: '/notes/os-dev-use/kernel/process/pas' },
                 ]
               },
               { //level3
