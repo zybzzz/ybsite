@@ -335,6 +335,13 @@ export default defineConfig({
                     { text: 'modern io api(systor 22)', link: '/notes/os-dev-use/kernel/io/ioapi' },
                 ]
               },
+              { //level3
+                text: 'driver',
+                collapsed: true,
+                items: [
+                    { text: 'driver', link: '/notes/os-dev-use/kernel/driver/driver' },
+                ]
+              },
             ]
           }
         ]
