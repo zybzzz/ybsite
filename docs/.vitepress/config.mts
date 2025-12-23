@@ -317,6 +317,7 @@ export default defineConfig({
                 collapsed: true,
                 items: [
                     { text: 'mmap', link: '/notes/os-dev-use/kernel/mm/mmap' },
+                    { text: 'kernel memory manage', link: '/notes/os-dev-use/kernel/mm/kmem' },
                 ]
               },
               { //level3
