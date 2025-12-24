@@ -342,6 +342,14 @@ export default defineConfig({
                     { text: 'driver', link: '/notes/os-dev-use/kernel/driver/driver' },
                 ]
               },
+              { //level3
+                text: 'net',
+                collapsed: true,
+                items: [
+                    { text: 'net', link: '/notes/os-dev-use/kernel/net/net' },
+                    { text: 'net again', link: '/notes/os-dev-use/kernel/net/netagain' },
+                ]
+              },
             ]
           }
         ]
