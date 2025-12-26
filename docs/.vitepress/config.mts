@@ -689,6 +689,7 @@ export default defineConfig({
               { text: 'Backend Target', link: '/notes/compiler/llvm/target' },
               { text: 'Alias Analysis', link: '/notes/compiler/llvm/aa' },
               { text: 'Auto vectorize', link: '/notes/compiler/llvm/autov' },
+              { text: 'mem2reg', link: '/notes/compiler/llvm/mem2reg' },
             ]
           },
         ]
