@@ -693,6 +693,7 @@ export default defineConfig({
               { text: 'inline', link: '/notes/compiler/llvm/inline' },
               { text: 'code layout', link: '/notes/compiler/llvm/codelay' },
               { text: 'attribute', link: '/notes/compiler/llvm/attr' },
+              { text: 'symbol table', link: '/notes/compiler/llvm/symbol' },
             ]
           },
         ]
