@@ -691,6 +691,7 @@ export default defineConfig({
               { text: 'Auto vectorize', link: '/notes/compiler/llvm/autov' },
               { text: 'mem2reg', link: '/notes/compiler/llvm/mem2reg' },
               { text: 'inline', link: '/notes/compiler/llvm/inline' },
+              { text: 'code layout', link: '/notes/compiler/llvm/codelay' },
             ]
           },
         ]
