@@ -690,6 +690,7 @@ export default defineConfig({
               { text: 'Alias Analysis', link: '/notes/compiler/llvm/aa' },
               { text: 'Auto vectorize', link: '/notes/compiler/llvm/autov' },
               { text: 'mem2reg', link: '/notes/compiler/llvm/mem2reg' },
+              { text: 'inline', link: '/notes/compiler/llvm/inline' },
             ]
           },
         ]
