@@ -687,6 +687,7 @@ export default defineConfig({
               { text: 'instruction selection', link: '/notes/compiler/llvm/isel' },
               { text: 'selectionDAG', link: '/notes/compiler/llvm/selectiondag' },
               { text: 'Backend Target', link: '/notes/compiler/llvm/target' },
+              { text: 'Alias Analysis', link: '/notes/compiler/llvm/aa' },
             ]
           },
         ]
