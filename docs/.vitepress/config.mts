@@ -200,6 +200,7 @@ export default defineConfig({
                 collapsed: true,
                 items: [
                   { text: 'memory model and branch instruction', link: '/notes/arch/arm/snippets/mm_branch' },
+                  { text: 'apple frontend', link: '/notes/arch/arm/snippets/applefrontend' },
                 ]
               }
             ]
