@@ -219,6 +219,7 @@ export default defineConfig({
             items: [
               { text: 'intel family cache & mem order', link: '/notes/arch/x86/candmorder' },
               { text: 'optimize', link: '/notes/arch/x86/optimize' },
+              { text: 'amd zen and vector', link: '/notes/arch/x86/amdzenandvec' },
             ]
           },
           { //level2
