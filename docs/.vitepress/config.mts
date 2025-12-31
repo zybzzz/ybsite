@@ -271,6 +271,7 @@ export default defineConfig({
                 { text: 'diff', link: '/notes/os-dev-use/linux-use/diff' },
                 { text: 'coro', link: '/notes/os-dev-use/linux-use/coro' },
                 { text: 'io', link: '/notes/os-dev-use/linux-use/io' },
+                { text: 'self-motified code', link: '/notes/os-dev-use/linux-use/selfmodi' },
             ]
           },
           { //level2
