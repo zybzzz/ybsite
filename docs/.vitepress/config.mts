@@ -368,6 +368,7 @@ export default defineConfig({
             collapsed: true,
             items: [
                 { text: 'arena', link: '/notes/libs/folly/arena' },
+                { text: 'threadlocal', link: '/notes/libs/folly/threadlocal' },
             ]
           }
         ]
