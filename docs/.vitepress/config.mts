@@ -359,6 +359,19 @@ export default defineConfig({
       },
 
 
+      {
+        text: 'Libs',
+        collapsed: false,
+        items: [
+          { //level2
+            text: 'folly',
+            collapsed: true,
+            items: [
+                { text: 'arena', link: '/notes/libs/folly/arena' },
+            ]
+          }
+        ]
+      },
 
       {
         text: 'Language learning',
