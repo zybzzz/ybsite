@@ -369,6 +369,7 @@ export default defineConfig({
             items: [
                 { text: 'arena', link: '/notes/libs/folly/arena' },
                 { text: 'threadlocal', link: '/notes/libs/folly/threadlocal' },
+                { text: 'spscqueue', link: '/notes/libs/folly/specqueue' },
             ]
           }
         ]
