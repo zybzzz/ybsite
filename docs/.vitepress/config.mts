@@ -157,6 +157,14 @@ export default defineConfig({
               { text: 'project arch', link: '/notes/aisys/triton/projarch' },
             ]
           },
+          { //level2
+            text: 'cuda',
+            collapsed: true,
+            items: [
+              { text: 'reduce', link: '/notes/aisys/cuda/reduce' },
+              { text: 'scheduler', link: '/notes/aisys/cuda/scheduler' },
+            ]
+          },
 
         ]
       },
