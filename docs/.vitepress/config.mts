@@ -165,7 +165,13 @@ export default defineConfig({
               { text: 'scheduler', link: '/notes/aisys/cuda/scheduler' },
             ]
           },
-
+          { //level2
+            text: 'LeetGPU',
+            collapsed: true,
+            items: [
+              { text: 'vector add', link: '/notes/aisys/LeetGPU/vadd' },
+            ]
+          },
         ]
       },
 
