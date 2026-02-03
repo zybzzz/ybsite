@@ -170,6 +170,7 @@ export default defineConfig({
             collapsed: true,
             items: [
               { text: 'vector add', link: '/notes/aisys/LeetGPU/vadd' },
+              { text: 'fp32 gemm', link: '/notes/aisys/LeetGPU/fp32gemm' },
             ]
           },
         ]
