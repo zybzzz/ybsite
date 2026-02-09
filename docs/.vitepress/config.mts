@@ -396,6 +396,15 @@ export default defineConfig({
         collapsed: false,
         items: [
           { //level2
+            text: 'TS',
+            collapsed: true,
+            link: '/notes/langlearn/ts/',
+            items: [
+              { text: 'ts basic', link: '/notes/langlearn/ts/basic' },
+              { text: 'ts queue', link: '/notes/langlearn/ts/queue' },
+            ]
+          },
+          { //level2
             text: 'python',
             collapsed: true,
             link: '/notes/langlearn/python/',
