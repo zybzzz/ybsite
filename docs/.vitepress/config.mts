@@ -173,6 +173,13 @@ export default defineConfig({
               { text: 'fp32 gemm', link: '/notes/aisys/LeetGPU/fp32gemm' },
             ]
           },
+          { //level2
+            text: 'snip',
+            collapsed: true,
+            items: [
+              { text: 'rag', link: '/notes/aisys/snip/rag' },
+            ]
+          },
         ]
       },
 
