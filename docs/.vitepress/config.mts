@@ -475,6 +475,13 @@ export default defineConfig({
                 ]
               },
             ]
+          },
+          { //level2
+            text: 'rust',
+            collapsed: true,
+            items: [
+              { text: '解引用、DST 与 Deref', link: '/notes/langlearn/rust/deref' },
+            ]
           }
         ]
       },
