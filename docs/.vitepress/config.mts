@@ -481,6 +481,7 @@ export default defineConfig({
             collapsed: true,
             items: [
               { text: '解引用、DST 与 Deref', link: '/notes/langlearn/rust/deref' },
+              { text: '模块系统与 use', link: '/notes/langlearn/rust/mod' },
             ]
           }
         ]
