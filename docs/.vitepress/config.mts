@@ -485,6 +485,7 @@ export default defineConfig({
               { text: '模式匹配与 Copy/Move', link: '/notes/langlearn/rust/pmatch' },
               { text: '静态分发与动态分发', link: '/notes/langlearn/rust/dispatch' },
               { text: '生命周期', link: '/notes/langlearn/rust/lifetime' },
+              { text: '迭代器', link: '/notes/langlearn/rust/iter' },
             ]
           }
         ]
