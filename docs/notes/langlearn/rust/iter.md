@@ -100,6 +100,84 @@ let count = v.iter().count();
 
 用 `.map()` 做副作用（修改外部变量）不是惯用写法，应当用 `.for_each()` 或对应的消费者方法。
 
+## 迭代器的生命周期
+
+迭代器是临时值，被消费者方法吃掉后就不存在了。理解迭代器"什么时候消失"是避免困惑的关键。
+
+### 消费后迭代器不可再用
+
+```rust
+let v = vec![1, 2, 3];
+let iter = v.iter();
+let sum: i32 = iter.sum();  // iter 被消费
+// iter.count();             // 编译错误：iter 已经被 move 走了
+```
+
+### 借用迭代器不消耗原数据
+
+`.iter()` 是借用遍历，原数据仍然可以通过下标或再次创建迭代器访问：
+
+```rust
+let arr = [1, 2, 3];
+
+// 迭代器只在 .all() 这一步存在，消费后消失
+let all_positive = arr.iter().all(|v| *v > 0);
+
+// arr 本身没有被移走，仍然可以用
+println!("{}", arr[0]); // OK
+```
+
+### 判断迭代器是否被消费
+
+看链条末尾的方法返回什么：
+
+- **返回具体值**（非迭代器）→ 迭代器被消费了：`.all()`、`.count()`、`.collect()`、`.sum()` 等
+- **返回新迭代器** → 原迭代器被转换，还没真正执行：`.map()`、`.filter()`、`.take()` 等
+
+```rust
+// 惰性链：什么都没执行，迭代器还在（但已转换为新类型）
+let iter = arr.iter().map(|x| x + 1).filter(|x| *x > 0);
+
+// 消费：迭代器被吃掉，拿到最终结果
+let result: Vec<_> = iter.collect(); // iter 被消费，之后不能再用
+```
+
+### 闭包参数中的模式匹配
+
+闭包参数位置支持模式匹配，和 `let`、`match` 中一样：
+
+```rust
+|&v|                    // 解构引用：&i16 → v 是 i16
+|(a, b)|                // 解构元组
+|Person { name, age }|  // 解构结构体
+```
+
+这在迭代器链中经常用来解引用，避免手写 `*`：
+
+```rust
+// 两种等价写法
+arr.iter().all(|v| *v > 0)    // v 是 &i32，手动解引用
+arr.iter().all(|&v| v > 0)    // 模式匹配解引用，v 是 i32
+```
+
+### 函数式链条实战
+
+```rust
+fn try_from([r, g, b]: [i16; 3]) -> Result<Color, IntoColorError> {
+    [r, g, b].iter()
+        .all(|v| (0..=255).contains(v))           // 检查范围
+        .then(|| Color { red: r as u8, green: g as u8, blue: b as u8 })  // true → Some
+        .ok_or(IntoColorError::IntConversion)      // None → Err
+}
+```
+
+链路说明：
+
+1. `.iter()` — 借用遍历数组，不消耗 `r`、`g`、`b`
+2. `.all(...)` — 消费迭代器，返回 `bool`（迭代器到此消失）
+3. `.then(|| ...)` — `bool` 的方法，`true` 返回 `Some`，`false` 返回 `None`
+4. `.ok_or(...)` — `Option` 的方法，`None` 转为 `Err`
+
 ## collect() 的类型驱动行为
 
 `collect()` 的行为由目标类型决定，本质是调用目标类型的 `FromIterator` 实现。同一个迭代器，指定不同返回类型，行为完全不同：

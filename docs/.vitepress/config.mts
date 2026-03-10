@@ -486,6 +486,9 @@ export default defineConfig({
               { text: '静态分发与动态分发', link: '/notes/langlearn/rust/dispatch' },
               { text: '生命周期', link: '/notes/langlearn/rust/lifetime' },
               { text: '迭代器', link: '/notes/langlearn/rust/iter' },
+              { text: '智能指针与内部可变性', link: '/notes/langlearn/rust/smartptr' },
+              { text: '宏', link: '/notes/langlearn/rust/macro' },
+              { text: '类型转换 trait', link: '/notes/langlearn/rust/convert' },
             ]
           }
         ]
