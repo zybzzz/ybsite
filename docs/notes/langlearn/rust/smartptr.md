@@ -50,6 +50,40 @@ let big2 = big;  // 转移所有权只拷贝一个指针，而非 1MB
 let animal: Box<dyn Animal> = Box::new(Dog {});
 ```
 
+### Box::leak：主动放弃释放，换取 'static 生命周期
+
+`Box::leak` 消耗一个 `Box<T>`，返回 `&'static mut T`。它阻止 `Box` 的析构函数运行，堆内存不会被自动释放，数据在程序的整个生命周期内一直存在。
+
+```rust
+let x = Box::new(String::from("hello"));
+let static_ref: &'static mut String = Box::leak(x);
+// x 的所有权被消耗，堆内存不会被释放
+// static_ref 是一个 'static 生命周期的可变引用，程序运行期间永远有效
+static_ref.push_str(" world");
+```
+
+核心转换：`Box<T>` → `&'static mut T`。本质是一种"合法的内存泄漏"——告诉编译器这块堆内存不需要自动回收。
+
+**典型使用场景：**
+
+- **运行时创建全局数据**：在运行时计算出配置信息，需要作为 `&'static` 引用被各处使用。比 `lazy_static` / `OnceLock` 更直接
+- **`String` → `&'static str`**：动态生成的字符串需要传给只接受 `&'static str` 的 API（常见于 FFI 绑定）
+- **FFI 交互**：将 Rust 对象传给 C 代码时，先 `leak` 阻止 Rust 回收，等 C 用完后通过 `Box::from_raw` 重新接管并释放
+- **程序级生命周期数据**：数据需要伴随程序直到退出，手动 `drop` 反而浪费 CPU，直接 `leak` 让操作系统在进程退出时统一回收
+
+```rust
+// 典型用法：运行时生成 &'static str
+fn make_static_str(s: String) -> &'static str {
+    Box::leak(s.into_boxed_str())
+}
+
+// 配合 Box::from_raw 可以"找回"泄漏的内存
+let x = Box::new(42);
+let raw: *mut i32 = Box::into_raw(x);  // 类似 leak，但返回原始指针
+// ... 传给 FFI 或其他用途 ...
+let x = unsafe { Box::from_raw(raw) };  // 重新接管，离开作用域时正常释放
+```
+
 ## Rc\<T\>：单线程共享所有权
 
 Rust 的所有权规则要求一个值只有一个所有者，但有些数据结构天然需要多个所有者（图、DAG、共享节点的树）。`Rc`（Reference Counted）通过引用计数实现共享所有权。

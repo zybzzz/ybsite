@@ -489,6 +489,7 @@ export default defineConfig({
               { text: '智能指针与内部可变性', link: '/notes/langlearn/rust/smartptr' },
               { text: '宏', link: '/notes/langlearn/rust/macro' },
               { text: '类型转换 trait', link: '/notes/langlearn/rust/convert' },
+              { text: '异步', link: '/notes/langlearn/rust/async' },
             ]
           }
         ]
